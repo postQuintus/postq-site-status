@@ -84,13 +84,30 @@ export default function StatusClient({ initialServers }: Props) {
         </div>
       )}
 
-      <div style={{ marginTop: '60px', paddingTop: '24px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <a href="https://t.me/postq_vpn_bot" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '12px', color: 'rgba(147,27,121,0.7)', textDecoration: 'none', letterSpacing: '0.06em' }}>@postq_vpn_bot</a>
-          <span style={{ color: 'var(--border)', fontSize: '12px', userSelect: 'none' }}>·</span>
-          <a href="https://postq.space/privacy" style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '12px', color: 'rgba(147,27,121,0.7)', textDecoration: 'none', letterSpacing: '0.06em' }}>политика конфиденциальности</a>
-        </div>
-        <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '12px', color: 'rgba(147,27,121,0.5)', letterSpacing: '0.04em' }}>© 2026 postq vpn</span>
+      <div style={{ marginTop: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
+        <a
+          href="https://t.me/postq_vpn_bot"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.55)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.3)')}
+        >
+          @postq_vpn_bot
+        </a>
+        <span style={{ color: 'rgba(147,27,121,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
+        <a
+          href="https://postq.space/privacy"
+          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.55)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.3)')}
+        >
+          политика конфиденциальности
+        </a>
+        <span style={{ color: 'rgba(147,27,121,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
+        <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', whiteSpace: 'nowrap' }}>
+          © 2026 postq vpn
+        </span>
       </div>
     </div>
   )

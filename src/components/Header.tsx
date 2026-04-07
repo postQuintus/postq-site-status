@@ -3,11 +3,28 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import PersonalAccountButton from './PersonalAccountButton'
 
 export default function Header() {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/40 backdrop-blur-md shadow-lg shadow-black/10">
+    <header
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.1)' : '1px solid transparent',
+        background: scrolled ? 'rgba(0,0,0,0.4)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.1)' : 'none',
+      }}
+    >
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-14">
         <motion.div
           initial={{ opacity: 0, x: -20 }}

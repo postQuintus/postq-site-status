@@ -22,6 +22,9 @@ export default function PersonalAccountButton() {
         background: 'linear-gradient(135deg, rgba(207, 0, 163, 0.15) 0%, rgba(147, 27, 121, 0.1) 100%)',
         boxShadow: '0 0 15px rgba(207, 0, 163, 0.3), inset 0 0 15px rgba(207, 0, 163, 0.05)',
         color: 'rgb(255, 255, 255)',
+        transitionProperty: 'color, background-color, border-color, box-shadow, transform, opacity',
+        transitionDuration: '200ms',
+        transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
       личный кабинет
