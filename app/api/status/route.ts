@@ -27,7 +27,7 @@ async function fetchFromChecker(): Promise<ServerStatus[]> {
 
   const credentials = Buffer.from(`${user}:${pass}`).toString('base64')
 
-  const res = await fetch(`${baseUrl}/api/proxies`, {
+  const res = await fetch(`${baseUrl}/api/v1/public/proxies`, {
     headers: { Authorization: `Basic ${credentials}` },
     next: { revalidate: 60 },
   })
@@ -37,12 +37,13 @@ async function fetchFromChecker(): Promise<ServerStatus[]> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const data: any[] = await res.json()
+  const json = await res.json()
+  const data: any[] = json.data ?? json
 
   return data.map((p) => ({
     name: p.name ?? p.remark ?? p.tag ?? 'Unknown',
     protocol: (p.protocol ?? p.type ?? 'unknown').toLowerCase(),
-    alive: Boolean(p.alive ?? p.status === 'online' ?? p.online),
+    alive: Boolean((p.alive ?? (p.status === 'online')) || Boolean(p.online)),
     latency: Number(p.latency ?? p.delay ?? 0),
   }))
 }

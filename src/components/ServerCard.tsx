@@ -1,3 +1,5 @@
+"use client"
+
 interface ServerCardProps {
   name: string
   protocol: string
