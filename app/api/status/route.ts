@@ -44,7 +44,7 @@ async function fetchFromChecker(): Promise<ServerStatus[]> {
     name: p.name ?? p.remark ?? p.tag ?? 'Unknown',
     protocol: (p.protocol ?? p.type ?? 'unknown').toLowerCase(),
     alive: Boolean((p.alive ?? (p.status === 'online')) || Boolean(p.online)),
-    latency: Number(p.latency ?? p.delay ?? 0),
+    latency: Number(p.latencyMs ?? p.latency ?? p.delay ?? 0),
   }))
 }
 

@@ -89,7 +89,7 @@ export default function ServerCard({ name, protocol, alive, latency }: ServerCar
           textTransform: 'uppercase' as const,
         }}
       >
-        {protocolLabel}
+        {latency > 0 ? `${latency} ms` : "—"}
       </span>
 
       {/* Latency / status */}
@@ -104,7 +104,7 @@ export default function ServerCard({ name, protocol, alive, latency }: ServerCar
           color: alive ? 'var(--text2)' : '#ef4444',
         }}
       >
-        {alive ? (latency > 0 ? `${latency} ms` : 'онлайн') : 'недоступен'}
+        
       </span>
     </div>
   )
