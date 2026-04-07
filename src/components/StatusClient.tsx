@@ -16,6 +16,17 @@ export default function StatusClient({ initialServers }: Props) {
   }))
 
   useEffect(() => {
+    // DEV MOCK
+    if (process.env.NODE_ENV === 'development') {
+      setServers([
+        { name: '🇩🇪 Германия', protocol: 'vless', alive: true, latency: 412 },
+        { name: '🇫🇮 Финляндия', protocol: 'vless', alive: true, latency: 298 },
+        { name: '🇳🇱 Нидерланды', protocol: 'vless', alive: false, latency: 0 },
+        { name: '🇵🇱 Польша', protocol: 'vless', alive: true, latency: 387 },
+        { name: '🇷🇺 Россия #1', protocol: 'vless', alive: true, latency: 440 },
+      ])
+      return
+    }
     const fetchData = async () => {
       try {
         const res = await fetch('/api/status')
@@ -25,7 +36,7 @@ export default function StatusClient({ initialServers }: Props) {
           day: '2-digit', month: '2-digit', year: 'numeric',
           hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow',
         }))
-      } catch {}
+      } catch { }
     }
     const interval = setInterval(fetchData, 30000)
     return () => clearInterval(interval)
@@ -39,13 +50,8 @@ export default function StatusClient({ initialServers }: Props) {
 
   const statusHeadline = loading
     ? 'загружаем данные...'
-    : allOnline ? 'все серверы работают'
-    : allOffline ? 'серверы недоступны'
-    : `${online} из ${total} серверов онлайн`
-
-  const badgeColor = loading ? 'rgba(161,161,170,0.15)' : allOnline ? 'rgba(34,197,94,0.12)' : allOffline ? 'rgba(239,68,68,0.12)' : 'rgba(245,158,11,0.12)'
-  const badgeBorder = loading ? 'rgba(161,161,170,0.3)' : allOnline ? 'rgba(34,197,94,0.35)' : allOffline ? 'rgba(239,68,68,0.35)' : 'rgba(245,158,11,0.35)'
-  const badgeText = loading ? '#a1a1aa' : allOnline ? '#22c55e' : allOffline ? '#ef4444' : '#f59e0b'
+    : allOnline ? 'Всё работает'
+      : 'Что-то не работает'
 
   return (
     <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px', margin: '0 auto', padding: '100px 24px 80px' }}>
@@ -53,12 +59,12 @@ export default function StatusClient({ initialServers }: Props) {
         <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '12px', fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#931b79', marginBottom: '12px' }}>
           статус серверов
         </p>
-        <h1 style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: 'clamp(1.8rem, 5vw, 3rem)', lineHeight: 1.1, color: '#cf00a3', textShadow: '0 0 40px rgba(207,0,163,0.2)', marginBottom: '16px' }}>
+        <h1 style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: 'clamp(1.8rem, 5vw, 3rem)', lineHeight: 1.1, color: '#ffffff', marginBottom: '16px' }}>
           {statusHeadline}
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           {!loading && (
-            <span style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 14px', background: badgeColor, border: `1px solid ${badgeBorder}`, borderRadius: '999px', fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '13px', fontWeight: 500, color: badgeText }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 14px', background: 'rgba(207,0,163,0.12)', border: '1px solid rgba(207,0,163,0.35)', borderRadius: '999px', fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '13px', fontWeight: 500, color: '#cf00a3' }}>
               {online} / {total} онлайн
             </span>
           )}
@@ -78,12 +84,13 @@ export default function StatusClient({ initialServers }: Props) {
         </div>
       )}
 
-      <div style={{ marginTop: '60px', paddingTop: '24px', borderTop: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
-        <a href="https://t.me/postq_vpn_bot" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '12px', color: 'rgba(147,27,121,0.7)', textDecoration: 'none', letterSpacing: '0.06em' }}>@postq_vpn_bot</a>
-        <span style={{ color: 'var(--border)', fontSize: '12px' }}>·</span>
-        <a href="https://postq.space/privacy" style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '12px', color: 'rgba(147,27,121,0.7)', textDecoration: 'none', letterSpacing: '0.06em' }}>политика конфиденциальности</a>
-        <span style={{ color: 'var(--border)', fontSize: '12px' }}>·</span>
-        <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '12px', color: 'rgba(147,27,121,0.5)', letterSpacing: '0.04em' }}>© 2026 PostQ VPN</span>
+      <div style={{ marginTop: '60px', paddingTop: '24px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <a href="https://t.me/postq_vpn_bot" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '12px', color: 'rgba(147,27,121,0.7)', textDecoration: 'none', letterSpacing: '0.06em' }}>@postq_vpn_bot</a>
+          <span style={{ color: 'var(--border)', fontSize: '12px', userSelect: 'none' }}>·</span>
+          <a href="https://postq.space/privacy" style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '12px', color: 'rgba(147,27,121,0.7)', textDecoration: 'none', letterSpacing: '0.06em' }}>политика конфиденциальности</a>
+        </div>
+        <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '12px', color: 'rgba(147,27,121,0.5)', letterSpacing: '0.04em' }}>© 2026 postq vpn</span>
       </div>
     </div>
   )

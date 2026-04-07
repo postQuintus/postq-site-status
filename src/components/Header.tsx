@@ -8,7 +8,7 @@ import PersonalAccountButton from './PersonalAccountButton'
 export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/40 backdrop-blur-md shadow-lg shadow-black/10">
-      <div className="max-w-4xl mx-auto px-6 flex items-center justify-between h-14">
+      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-14">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}

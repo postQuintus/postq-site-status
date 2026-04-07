@@ -46,16 +46,16 @@ export default function ServerCard({ name, protocol, alive, latency }: ServerCar
     >
       {/* Status dot */}
       <span
-        className={alive ? 'dot-pulse' : undefined}
-        style={{
-          flexShrink: 0,
-          width: '8px',
-          height: '8px',
+        className={alive ? 'dot-wrapper dot-pulse' : 'dot-wrapper'}
+        style={{ flexShrink: 0, position: 'relative', width: '8px', height: '8px' }}
+      >
+        <span style={{
+          position: 'absolute', inset: 0,
           borderRadius: '50%',
           background: dotColor,
           boxShadow: dotGlow,
-        }}
-      />
+        }} />
+      </span>
 
       {/* Server name */}
       <span
@@ -73,26 +73,7 @@ export default function ServerCard({ name, protocol, alive, latency }: ServerCar
         {name}
       </span>
 
-      {/* Protocol badge */}
-      <span
-        style={{
-          flexShrink: 0,
-          padding: '2px 8px',
-          background: 'var(--bg3)',
-          border: '1px solid var(--border)',
-          borderRadius: '6px',
-          fontFamily: "'GT Eesti Pro Text', system-ui, -apple-system, sans-serif",
-          fontSize: '11px',
-          fontWeight: 500,
-          letterSpacing: '0.06em',
-          color: 'var(--text2)',
-          textTransform: 'uppercase' as const,
-        }}
-      >
-        {latency > 0 ? `${latency} ms` : "—"}
-      </span>
-
-      {/* Latency / status */}
+      {/* Latency */}
       <span
         style={{
           flexShrink: 0,
@@ -104,7 +85,7 @@ export default function ServerCard({ name, protocol, alive, latency }: ServerCar
           color: alive ? 'var(--text2)' : '#ef4444',
         }}
       >
-        
+        {latency > 0 ? `${latency} ms` : '—'}
       </span>
     </div>
   )

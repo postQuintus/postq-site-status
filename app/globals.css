@@ -116,13 +116,22 @@ html, body {
   background: rgba(207, 0, 163, 0.7);
 }
 
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.5); }
+@keyframes dot-ripple {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(3.5); opacity: 0; }
 }
 
-.dot-pulse {
-  animation: pulse-dot 2s ease-in-out infinite;
+.dot-wrapper {
+  display: inline-block;
+}
+
+.dot-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: dot-ripple 1.8s ease-out infinite;
 }
 
 @keyframes spotlight {
