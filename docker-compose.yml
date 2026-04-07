@@ -1,0 +1,53 @@
+services:
+  xray-checker:
+    image: kutovoys/xray-checker
+    container_name: postq_xray_checker
+    restart: unless-stopped
+    environment:
+      - SUBSCRIPTION_URL=${SUBSCRIPTION_URL}
+      - METRICS_PROTECTED=true
+      - METRICS_USERNAME=${XRAY_CHECKER_USER}
+      - METRICS_PASSWORD=${XRAY_CHECKER_PASS}
+      - WEB_PUBLIC=true
+      - CHECK_INTERVAL=300
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:2112/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+
+  postq-vpn-status:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: postq_vpn_status
+    restart: unless-stopped
+    environment:
+      - XRAY_CHECKER_URL=http://xray-checker:2112
+      - XRAY_CHECKER_USER=${XRAY_CHECKER_USER}
+      - XRAY_CHECKER_PASS=${XRAY_CHECKER_PASS}
+    depends_on:
+      xray-checker:
+        condition: service_healthy
+    networks:
+      - internal
+      - caddy_net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  # Internal network: xray-checker ↔ postq-vpn-status only (not exposed)
+  internal:
+    internal: true
+
+  # Caddy network on this server — name may differ, adjust to match your setup
+  # Create it first if it doesn't exist: docker network create caddy_net
+  caddy_net:
+    external: true

@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* GT Eesti Pro Display Fonts */
+@font-face {
+  font-family: 'GT Eesti Pro Display';
+  src: url('/fonts/gteestiprodisplay_thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GT Eesti Pro Display';
+  src: url('/fonts/gteestiprodisplay_light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GT Eesti Pro Display';
+  src: url('/fonts/gteestiprodisplay_regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GT Eesti Pro Display';
+  src: url('/fonts/gteestiprodisplay_medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GT Eesti Pro Display';
+  src: url('/fonts/gteestiprodisplay_bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GT Eesti Pro Display';
+  src: url('/fonts/gteestiprodisplay_ultrabold.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* GT Eesti Pro Text Fonts */
+@font-face {
+  font-family: 'GT Eesti Pro Text';
+  src: url('/fonts/gteestiprotext_regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GT Eesti Pro Text';
+  src: url('/fonts/gteestiprotext_medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GT Eesti Pro Text';
+  src: url('/fonts/gteestiprotext_bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+html, body {
+  --font-display: 'GT Eesti Pro Display', system-ui, -apple-system, sans-serif;
+  --font-text: 'GT Eesti Pro Text', system-ui, -apple-system, sans-serif;
+  --font-mono: 'GT Eesti Pro Display', monospace;
+}
+
+:root {
+  --bg: #04000f;
+  --bg2: #08001a;
+  --bg3: #1a1a24;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f4f4f5;
+  --text2: #a1a1aa;
+  --accent: #cf00a3;
+  --accent2: #931b79;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'GT Eesti Pro Text', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(207, 0, 163, 0.3);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(207, 0, 163, 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(207, 0, 163, 0.7);
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+
+.dot-pulse {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes spotlight {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
