@@ -84,7 +84,7 @@ export default function StatusClient({ initialServers }: Props) {
         </div>
       )}
 
-      <div style={{ marginTop: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px' }}>
+      <div style={{ marginTop: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', flexWrap: 'wrap', rowGap: '8px' }}>
         <a
           href="https://t.me/postq_vpn_bot"
           target="_blank"

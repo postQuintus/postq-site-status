@@ -36,7 +36,7 @@ export default function Header() {
             <div className="relative h-8 w-8 flex-shrink-0">
               <Image
                 src="/icons/icon.svg"
-                alt="PostQ Logo"
+                alt="postq logo"
                 fill
                 className="object-contain"
               />

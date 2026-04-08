@@ -2,14 +2,14 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Статус серверов — PostQ VPN',
-  description: 'Мониторинг состояния VPN-серверов PostQ в реальном времени',
+  title: 'postq vpn | статус серверов',
+  description: 'Мониторинг состояния VPN-серверов postq в реальном времени',
   icons: { icon: '/icons/icon.svg' },
   openGraph: {
-    title: 'Статус серверов — PostQ VPN',
-    description: 'Мониторинг состояния VPN-серверов PostQ в реальном времени',
+    title: 'postq vpn | статус серверов',
+    description: 'Мониторинг состояния VPN-серверов postq в реальном времени',
     url: 'https://status.postq.space',
-    siteName: 'PostQ VPN Status',
+    siteName: 'postq vpn status',
   },
 }
 
@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru">
+    <html lang="ru" suppressHydrationWarning>
       <body>{children}</body>
     </html>
   )
