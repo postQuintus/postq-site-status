@@ -117,6 +117,16 @@ export default function NotFound() {
           @postq_vpn_bot
         </a>
         <span style={{ color: 'rgba(147,27,121,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
+        <a
+          href="https://postq.space/privacy"
+          className="no-underline"
+          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.55)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.3)')}
+        >
+          политика конфиденциальности
+        </a>
+        <span style={{ color: 'rgba(147,27,121,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
         <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', whiteSpace: 'nowrap' }}>
           © 2026 postq vpn
         </span>
