@@ -17,36 +17,39 @@ export default function Header() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="fixed left-0 right-0 z-50 transition-all duration-500"
       style={{
-        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.1)' : '1px solid transparent',
-        background: scrolled ? 'rgba(0,0,0,0.4)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.1)' : 'none',
+        top: 0,
+        background: scrolled ? 'rgba(4,0,15,0.7)' : 'transparent',
+        backdropFilter: scrolled ? 'blur(24px) saturate(160%)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(160%)' : 'none',
+        borderBottom: scrolled
+          ? '1px solid rgba(207,0,163,0.12)'
+          : '1px solid transparent',
+        boxShadow: scrolled
+          ? '0 1px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)'
+          : 'none',
       }}
     >
       <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-14">
+
+        {/* Logo */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex items-center gap-2.5"
         >
           <Link href="https://postq.space" className="flex items-center gap-2.5 no-underline">
             <div className="relative h-8 w-8 flex-shrink-0">
-              <Image
-                src="/icons/icon.svg"
-                alt="postq logo"
-                fill
-                className="object-contain"
-              />
+              <Image src="/icons/icon.svg" alt="postq logo" fill className="object-contain" />
             </div>
-            <span className="text-base font-eesti-display" style={{ color: 'var(--text)' }}>
+            <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '15px', color: 'var(--text)' }}>
               postq vpn
             </span>
           </Link>
         </motion.div>
 
+        {/* Personal account button */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -54,6 +57,7 @@ export default function Header() {
         >
           <PersonalAccountButton />
         </motion.div>
+
       </div>
     </header>
   )
