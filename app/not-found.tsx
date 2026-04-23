@@ -45,13 +45,16 @@ export default function NotFound() {
             fontSize: '13px',
             lineHeight: '1.8',
             textAlign: 'left',
-            background: 'rgba(207,0,163,0.05)',
+            background: 'rgba(8,0,26,0.6)',
+            backdropFilter: 'blur(20px) saturate(150%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(150%)',
             border: '1px solid rgba(207,0,163,0.18)',
             borderRadius: '10px',
             padding: '14px 20px',
             minWidth: '320px',
             maxWidth: '420px',
             width: '100%',
+            boxShadow: '0 0 32px rgba(207,0,163,0.06), inset 0 1px 0 rgba(255,255,255,0.04)',
           }}>
             {LOG_LINES.map((line, i) => (
               <div
@@ -101,69 +104,46 @@ export default function NotFound() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
-        style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', rowGap: '8px' }}
+        transition={{ delay: 0.9 }}
+        className="absolute bottom-0 left-0 right-0 z-20"
+        style={{
+          borderTop: '1px solid rgba(207,0,163,0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '16px',
+          flexWrap: 'wrap',
+          rowGap: '8px',
+          padding: '28px 24px 44px',
+        }}
       >
         <a
           href="https://t.me/postq_vpn_bot"
           target="_blank"
           rel="noopener noreferrer"
           className="no-underline"
-          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.55)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.3)')}
+          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', letterSpacing: '0.07em', color: 'rgba(215,194,240,0.4)', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.7)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.4)')}
         >
           @postq_vpn_bot
         </a>
-        <span style={{ color: 'rgba(147,27,121,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
+        <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
         <a
           href="https://postq.space/privacy"
           className="no-underline"
-          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.55)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.3)')}
+          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', letterSpacing: '0.07em', color: 'rgba(215,194,240,0.4)', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.7)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.4)')}
         >
           политика конфиденциальности
         </a>
-        <span style={{ color: 'rgba(147,27,121,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
-        <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', whiteSpace: 'nowrap' }}>
+        <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
+        <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', letterSpacing: '0.07em', color: 'rgba(215,194,240,0.35)', whiteSpace: 'nowrap' }}>
           © 2026 postq vpn
         </span>
       </motion.div>
 
-      <style>{`
-        .spotlight-orb {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(80px);
-          will-change: transform, opacity;
-        }
-        .spotlight-orb-1 {
-          width: 55vw; height: 55vw;
-          background: radial-gradient(circle, rgba(207,0,163,0.22) 0%, transparent 70%);
-          top: -10%; left: -5%;
-          animation: orb1 18s ease-in-out infinite alternate;
-        }
-        .spotlight-orb-2 {
-          width: 45vw; height: 45vw;
-          background: radial-gradient(circle, rgba(147,27,121,0.16) 0%, transparent 70%);
-          bottom: -15%; right: -5%;
-          animation: orb2 22s ease-in-out infinite alternate;
-        }
-        @keyframes orb1 {
-          0%   { transform: translate(0, 0) scale(1); opacity: 0.8; }
-          33%  { transform: translate(8vw, 12vh) scale(1.1); opacity: 1; }
-          66%  { transform: translate(20vw, 5vh) scale(0.95); opacity: 0.7; }
-          100% { transform: translate(5vw, 20vh) scale(1.05); opacity: 0.9; }
-        }
-        @keyframes orb2 {
-          0%   { transform: translate(0, 0) scale(1); opacity: 0.6; }
-          33%  { transform: translate(-12vw, -8vh) scale(1.15); opacity: 0.85; }
-          66%  { transform: translate(-5vw, -18vh) scale(0.9); opacity: 0.7; }
-          100% { transform: translate(-18vw, -5vh) scale(1.1); opacity: 0.8; }
-        }
-      `}</style>
     </main>
   )
 }

@@ -32,16 +32,23 @@ export default function ServerCard({ name, protocol, alive, latency }: ServerCar
         alignItems: 'center',
         gap: '12px',
         padding: '14px 18px',
-        background: 'var(--bg2)',
-        border: '1px solid var(--border)',
+        background: 'rgba(255,255,255,0.03)',
+        backdropFilter: 'blur(16px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(16px) saturate(150%)',
+        border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: '12px',
-        transition: 'border-color 200ms ease',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
+        transition: 'border-color 200ms ease, box-shadow 200ms ease',
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(207, 0, 163, 0.25)'
+        const el = e.currentTarget as HTMLDivElement
+        el.style.borderColor = 'rgba(207,0,163,0.25)'
+        el.style.boxShadow = '0 0 18px rgba(207,0,163,0.08), inset 0 1px 0 rgba(255,255,255,0.06)'
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)'
+        const el = e.currentTarget as HTMLDivElement
+        el.style.borderColor = 'rgba(255,255,255,0.08)'
+        el.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.04)'
       }}
     >
       {/* Status dot */}

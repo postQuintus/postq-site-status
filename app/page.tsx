@@ -30,11 +30,12 @@ async function getServers(): Promise<ServerStatus[]> {
 export default async function StatusPage() {
   const servers = await getServers()
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--bg)', position: 'relative' }}>
-      <Header />
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 15%, rgba(207,0,163,0.18), transparent 22%), radial-gradient(circle at 80% 10%, rgba(147,27,121,0.10), transparent 20%)' }} />
+    <main className="relative w-full min-h-screen">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }} aria-hidden>
+        <div className="spotlight-orb spotlight-orb-1" />
+        <div className="spotlight-orb spotlight-orb-2" />
       </div>
+      <Header />
       <StatusClient initialServers={servers} />
     </main>
   )

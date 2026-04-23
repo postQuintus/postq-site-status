@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import ServerCard from './ServerCard'
 import type { ServerStatus } from '../../app/api/status/route'
 
@@ -79,36 +80,51 @@ export default function StatusClient({ initialServers }: Props) {
           {servers.map((server, i) => <ServerCard key={i} {...server} />)}
         </div>
       ) : (
-        <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text2)', fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '14px', background: 'var(--bg2)', border: '1px solid var(--border)', borderRadius: '12px' }}>
+        <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text2)', fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '14px', background: 'rgba(8,0,26,0.55)', backdropFilter: 'blur(16px) saturate(150%)', WebkitBackdropFilter: 'blur(16px) saturate(150%)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}>
           Данные загружаются. Пожалуйста, подождите...
         </div>
       )}
 
-      <div style={{ marginTop: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', flexWrap: 'wrap', rowGap: '8px' }}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9 }}
+        style={{
+          borderTop: '1px solid rgba(207,0,163,0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '16px',
+          flexWrap: 'wrap',
+          rowGap: '8px',
+          padding: '28px 0 0',
+          marginTop: '60px',
+        }}
+      >
         <a
           href="https://t.me/postq_vpn_bot"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.55)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.3)')}
+          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', letterSpacing: '0.07em', color: 'rgba(215,194,240,0.4)', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.7)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.4)')}
         >
           @postq_vpn_bot
         </a>
-        <span style={{ color: 'rgba(147,27,121,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
+        <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
         <a
           href="https://postq.space/privacy"
-          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.55)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(147,27,121,0.3)')}
+          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', letterSpacing: '0.07em', color: 'rgba(215,194,240,0.4)', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
+          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.7)')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.4)')}
         >
           политика конфиденциальности
         </a>
-        <span style={{ color: 'rgba(147,27,121,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
-        <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.08em', color: 'rgba(147,27,121,0.3)', whiteSpace: 'nowrap' }}>
+        <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
+        <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', letterSpacing: '0.07em', color: 'rgba(215,194,240,0.35)', whiteSpace: 'nowrap' }}>
           © 2026 postq vpn
         </span>
-      </div>
+      </motion.div>
     </div>
   )
 }
