@@ -43,7 +43,7 @@ export default function Header() {
             <div className="relative h-8 w-8 flex-shrink-0">
               <Image src="/icons/icon.svg" alt="postq logo" fill className="object-contain" />
             </div>
-            <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '15px', color: 'var(--text)' }}>
+            <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '16px', color: 'var(--text)' }}>
               postq vpn
             </span>
           </Link>
