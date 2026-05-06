@@ -56,7 +56,8 @@ export default function StatusClient({ initialServers }: Props) {
   const statusHeadline = loading
     ? 'загружаем данные...'
     : allOnline ? 'Всё работает'
-      : 'Что-то не работает'
+    : allOffline ? 'Ничего не работает :('
+    : 'Что-то не работает'
 
   return (
     <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px', margin: '0 auto', padding: '100px 24px 80px' }}>
