@@ -15,7 +15,7 @@ export default function PersonalAccountButton() {
       style={{
         fontFamily: "'GT Eesti Pro Display', system-ui, -apple-system, sans-serif",
         fontSize: '13px',
-        fontWeight: '300',
+        fontWeight: '400',
         letterSpacing: '0.06em',
         textShadow: '0 0 8px rgba(207, 0, 163, 0.6)',
         border: '1.5px solid rgba(207, 0, 163, 0.7)',

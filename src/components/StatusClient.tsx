@@ -49,6 +49,10 @@ export default function StatusClient({ initialServers }: Props) {
   const allOffline = total > 0 && online === 0
   const loading = total === 0
 
+  const isPremium = (name: string) => name.includes('🇷🇺')
+  const premiumServers = servers.filter((s) => isPremium(s.name))
+  const basicServers = servers.filter((s) => !isPremium(s.name))
+
   const statusHeadline = loading
     ? 'загружаем данные...'
     : allOnline ? 'Всё работает'
@@ -56,11 +60,13 @@ export default function StatusClient({ initialServers }: Props) {
 
   return (
     <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px', margin: '0 auto', padding: '100px 24px 80px' }}>
-      <div style={{ marginBottom: '40px' }}>
-        <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '12px', fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#931b79', marginBottom: '12px' }}>
-          статус серверов
-        </p>
-        <h1 style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: 'clamp(1.8rem, 5vw, 3rem)', lineHeight: 1.1, color: '#ffffff', marginBottom: '16px' }}>
+      <motion.div
+        initial={{ opacity: 0, y: 22 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.85, delay: 0.2 }}
+        style={{ marginBottom: '40px' }}
+      >
+        <h1 style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: 700, lineHeight: 1.1, color: '#ffffff', marginBottom: '16px' }}>
           {statusHeadline}
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
@@ -73,11 +79,30 @@ export default function StatusClient({ initialServers }: Props) {
             обновлено {now} МСК
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {servers.length > 0 ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {servers.map((server, i) => <ServerCard key={i} {...server} />)}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {basicServers.length > 0 && (
+            <div>
+              <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '11px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', marginBottom: '8px' }}>
+                postq vpn basic
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {basicServers.map((server, i) => <ServerCard key={i} {...server} />)}
+              </div>
+            </div>
+          )}
+          {premiumServers.length > 0 && (
+            <div>
+              <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '11px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', marginBottom: '8px' }}>
+                postq vpn premium
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {premiumServers.map((server, i) => <ServerCard key={i} {...server} />)}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text2)', fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '14px', background: 'rgba(8,0,26,0.55)', backdropFilter: 'blur(16px) saturate(150%)', WebkitBackdropFilter: 'blur(16px) saturate(150%)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}>
