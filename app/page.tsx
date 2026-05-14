@@ -41,7 +41,7 @@ async function getServices(): Promise<ServerStatus[]> {
     })(),
     (async () => {
       const t = Date.now()
-      const res = await fetch('https://web.postq.space/api/bot', {
+      const res = await fetch('https://web.postq.space/login', {
         method: 'HEAD',
         signal: AbortSignal.timeout(5000),
         redirect: 'follow',
