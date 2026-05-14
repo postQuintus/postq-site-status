@@ -31,6 +31,7 @@ services:
       - XRAY_CHECKER_URL=http://xray-checker:2112
       - XRAY_CHECKER_USER=${XRAY_CHECKER_USER}
       - XRAY_CHECKER_PASS=${XRAY_CHECKER_PASS}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     depends_on:
       xray-checker:
         condition: service_healthy
