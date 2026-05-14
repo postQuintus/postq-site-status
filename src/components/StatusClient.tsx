@@ -10,7 +10,7 @@ interface Props {
   initialServices: ServerStatus[]
 }
 
-export default function StatusClient({ initialServers, initialServices }: Props) {
+export default function StatusClient({ initialServers, initialServices = [] }: Props) {
   const [servers, setServers] = useState<ServerStatus[]>(initialServers)
   const [services, setServices] = useState<ServerStatus[]>(initialServices)
   const [now, setNow] = useState(() => new Date().toLocaleString('ru-RU', {

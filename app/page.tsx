@@ -74,7 +74,10 @@ async function getServices(): Promise<ServerStatus[]> {
 }
 
 export default async function StatusPage() {
-  const [servers, services] = await Promise.all([getServers(), getServices()])
+  const [servers, services] = await Promise.all([
+    getServers(),
+    getServices().catch(() => [] as ServerStatus[]),
+  ])
   return (
     <main className="relative w-full min-h-screen">
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }} aria-hidden>
