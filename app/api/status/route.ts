@@ -13,6 +13,7 @@ export interface StatusResponse {
   online: number
   total: number
   servers: ServerStatus[]
+  services: ServerStatus[]
   checkedAt: string
 }
 
@@ -48,15 +49,60 @@ async function fetchFromChecker(): Promise<ServerStatus[]> {
   }))
 }
 
+async function fetchServices(): Promise<ServerStatus[]> {
+  const results: ServerStatus[] = []
+
+  const [websiteResult, botResult] = await Promise.allSettled([
+    (async () => {
+      const t = Date.now()
+      const res = await fetch('https://web.postq.space', {
+        method: 'HEAD',
+        signal: AbortSignal.timeout(5000),
+        redirect: 'follow',
+      })
+      return { alive: res.ok, latency: Date.now() - t }
+    })(),
+    (async () => {
+      const token = process.env.TELEGRAM_BOT_TOKEN
+      if (!token) return null
+      const t = Date.now()
+      const res = await fetch(`https://api.telegram.org/bot${token}/getMe`, {
+        signal: AbortSignal.timeout(5000),
+      })
+      const json = await res.json()
+      return { alive: json.ok === true, latency: Date.now() - t }
+    })(),
+  ])
+
+  results.push({
+    name: '🌐 Личный кабинет',
+    protocol: 'WWW',
+    alive: websiteResult.status === 'fulfilled' && websiteResult.value.alive,
+    latency: websiteResult.status === 'fulfilled' ? websiteResult.value.latency : 0,
+  })
+
+  if (botResult.status === 'fulfilled' && botResult.value !== null) {
+    results.push({
+      name: '🤖 Бот',
+      protocol: 'TG',
+      alive: botResult.value.alive,
+      latency: botResult.value.latency,
+    })
+  }
+
+  return results
+}
+
 export async function GET() {
   try {
-    const servers = await fetchFromChecker()
+    const [servers, services] = await Promise.all([fetchFromChecker(), fetchServices()])
     const online = servers.filter((s) => s.alive).length
 
     const body: StatusResponse = {
       online,
       total: servers.length,
       servers,
+      services,
       checkedAt: new Date().toISOString(),
     }
 

@@ -7,17 +7,20 @@ import type { ServerStatus } from '../../app/api/status/route'
 
 interface Props {
   initialServers: ServerStatus[]
+  initialServices: ServerStatus[]
 }
 
-export default function StatusClient({ initialServers }: Props) {
+export default function StatusClient({ initialServers, initialServices }: Props) {
   const [servers, setServers] = useState<ServerStatus[]>(initialServers)
+  const [services, setServices] = useState<ServerStatus[]>(initialServices)
   const [now, setNow] = useState(() => new Date().toLocaleString('ru-RU', {
     day: '2-digit', month: '2-digit', year: 'numeric',
     hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow',
   }))
 
   useEffect(() => {
-    // DEV MOCK
+    // DEV MOCK: VPN servers replaced with fixtures (xray-checker not running locally).
+    // Services use real initial data from the server component — no override needed.
     if (process.env.NODE_ENV === 'development') {
       setServers([
         { name: '🇩🇪 Германия', protocol: 'vless', alive: true, latency: 412 },
@@ -33,6 +36,7 @@ export default function StatusClient({ initialServers }: Props) {
         const res = await fetch('/api/status')
         const json = await res.json()
         if (json.servers?.length) setServers(json.servers)
+        if (json.services?.length) setServices(json.services)
         setNow(new Date().toLocaleString('ru-RU', {
           day: '2-digit', month: '2-digit', year: 'numeric',
           hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow',
@@ -84,6 +88,11 @@ export default function StatusClient({ initialServers }: Props) {
 
       {servers.length > 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {services.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {services.map((svc, i) => <ServerCard key={i} {...svc} showStatus />)}
+            </div>
+          )}
           {basicServers.length > 0 && (
             <div>
               <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '11px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', marginBottom: '8px' }}>

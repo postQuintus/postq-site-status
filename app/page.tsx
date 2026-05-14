@@ -27,8 +27,54 @@ async function getServers(): Promise<ServerStatus[]> {
   }
 }
 
+async function getServices(): Promise<ServerStatus[]> {
+  const results: ServerStatus[] = []
+
+  const [websiteResult, botResult] = await Promise.allSettled([
+    (async () => {
+      const t = Date.now()
+      const res = await fetch('https://web.postq.space', {
+        method: 'HEAD',
+        signal: AbortSignal.timeout(5000),
+        redirect: 'follow',
+        cache: 'no-store',
+      })
+      return { alive: res.ok, latency: Date.now() - t }
+    })(),
+    (async () => {
+      const token = process.env.TELEGRAM_BOT_TOKEN
+      if (!token) return null
+      const t = Date.now()
+      const res = await fetch(`https://api.telegram.org/bot${token}/getMe`, {
+        signal: AbortSignal.timeout(5000),
+        cache: 'no-store',
+      })
+      const json = await res.json()
+      return { alive: json.ok === true, latency: Date.now() - t }
+    })(),
+  ])
+
+  results.push({
+    name: '🌐 Личный кабинет',
+    protocol: 'WWW',
+    alive: websiteResult.status === 'fulfilled' && websiteResult.value.alive,
+    latency: websiteResult.status === 'fulfilled' ? websiteResult.value.latency : 0,
+  })
+
+  if (botResult.status === 'fulfilled' && botResult.value !== null) {
+    results.push({
+      name: '🤖 Бот',
+      protocol: 'TG',
+      alive: botResult.value.alive,
+      latency: botResult.value.latency,
+    })
+  }
+
+  return results
+}
+
 export default async function StatusPage() {
-  const servers = await getServers()
+  const [servers, services] = await Promise.all([getServers(), getServices()])
   return (
     <main className="relative w-full min-h-screen">
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }} aria-hidden>
@@ -36,7 +82,7 @@ export default async function StatusPage() {
         <div className="spotlight-orb spotlight-orb-2" />
       </div>
       <Header />
-      <StatusClient initialServers={servers} />
+      <StatusClient initialServers={servers} initialServices={services} />
     </main>
   )
 }

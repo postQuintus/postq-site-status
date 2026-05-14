@@ -5,6 +5,7 @@ interface ServerCardProps {
   protocol: string
   alive: boolean
   latency: number
+  showStatus?: boolean
 }
 
 const PROTOCOL_LABELS: Record<string, string> = {
@@ -18,7 +19,7 @@ const PROTOCOL_LABELS: Record<string, string> = {
   tuic: 'TUIC',
 }
 
-export default function ServerCard({ name, protocol, alive, latency }: ServerCardProps) {
+export default function ServerCard({ name, protocol, alive, latency, showStatus }: ServerCardProps) {
   const protocolLabel = PROTOCOL_LABELS[protocol.toLowerCase()] ?? protocol.toUpperCase()
   const dotColor = alive ? '#22c55e' : '#ef4444'
   const dotGlow = alive
@@ -80,7 +81,7 @@ export default function ServerCard({ name, protocol, alive, latency }: ServerCar
         {name}
       </span>
 
-      {/* Latency */}
+      {/* Latency / status */}
       <span
         style={{
           flexShrink: 0,
@@ -92,7 +93,9 @@ export default function ServerCard({ name, protocol, alive, latency }: ServerCar
           color: alive ? 'var(--text2)' : '#ef4444',
         }}
       >
-        {latency > 0 ? `${latency} ms` : '—'}
+        {showStatus
+          ? (alive ? 'Работает' : 'Не работает')
+          : (latency > 0 ? `${latency} ms` : '—')}
       </span>
     </div>
   )
