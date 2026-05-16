@@ -10,7 +10,7 @@ interface ServerCardProps {
   showStatus?: boolean
 }
 
-const EMOJI_ICONS: Record<number, LucideIcon> = {
+const EMOJI_ICONS: Partial<Record<number, LucideIcon>> = {
   0x1F310: Globe, // 🌐
   0x1F916: Bot,   // 🤖
 }
