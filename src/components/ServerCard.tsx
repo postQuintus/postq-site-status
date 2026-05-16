@@ -1,5 +1,7 @@
 "use client"
 
+import { Globe, Bot, type LucideIcon } from 'lucide-react'
+
 interface ServerCardProps {
   name: string
   protocol: string
@@ -8,23 +10,50 @@ interface ServerCardProps {
   showStatus?: boolean
 }
 
-const PROTOCOL_LABELS: Record<string, string> = {
-  vless: 'VLESS',
-  vmess: 'VMess',
-  trojan: 'Trojan',
-  ss: 'SS',
-  shadowsocks: 'SS',
-  hysteria: 'Hysteria',
-  hysteria2: 'Hysteria2',
-  tuic: 'TUIC',
+const EMOJI_ICONS: Record<number, LucideIcon> = {
+  0x1F310: Globe, // 🌐
+  0x1F916: Bot,   // 🤖
 }
 
-export default function ServerCard({ name, protocol, alive, latency, showStatus }: ServerCardProps) {
-  const protocolLabel = PROTOCOL_LABELS[protocol.toLowerCase()] ?? protocol.toUpperCase()
+type NamePrefix =
+  | { type: 'flag'; code: string; cleanName: string }
+  | { type: 'icon'; Icon: LucideIcon; cleanName: string }
+  | { type: 'none'; cleanName: string }
+
+function parseNamePrefix(name: string): NamePrefix {
+  const chars = [...name]
+  if (chars.length === 0) return { type: 'none', cleanName: name }
+
+  const cp0 = chars[0].codePointAt(0) ?? 0
+
+  // Pair of regional indicator symbols → country flag
+  if (chars.length >= 2) {
+    const cp1 = chars[1].codePointAt(0) ?? 0
+    if (cp0 >= 0x1F1E6 && cp0 <= 0x1F1FF && cp1 >= 0x1F1E6 && cp1 <= 0x1F1FF) {
+      const code = (
+        String.fromCharCode(cp0 - 0x1F1E6 + 65) +
+        String.fromCharCode(cp1 - 0x1F1E6 + 65)
+      ).toLowerCase()
+      return { type: 'flag', code, cleanName: name.slice(chars[0].length + chars[1].length).trimStart() }
+    }
+  }
+
+  // Known single emoji → lucide icon
+  const Icon = EMOJI_ICONS[cp0]
+  if (Icon) {
+    return { type: 'icon', Icon, cleanName: name.slice(chars[0].length).trimStart() }
+  }
+
+  return { type: 'none', cleanName: name }
+}
+
+export default function ServerCard({ name, alive, latency, showStatus }: ServerCardProps) {
   const dotColor = alive ? '#22c55e' : '#ef4444'
   const dotGlow = alive
     ? '0 0 6px rgba(34, 197, 94, 0.7)'
     : '0 0 6px rgba(239, 68, 68, 0.7)'
+
+  const prefix = parseNamePrefix(name)
 
   return (
     <div
@@ -69,16 +98,32 @@ export default function ServerCard({ name, protocol, alive, latency, showStatus 
       <span
         style={{
           flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
           fontFamily: "'GT Eesti Pro Text', system-ui, -apple-system, sans-serif",
           fontSize: '14px',
           fontWeight: 400,
           color: 'var(--text)',
           overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
         }}
       >
-        {name}
+        {prefix.type === 'flag' && (
+          <img
+            src={`https://flagcdn.com/20x15/${prefix.code}.png`}
+            srcSet={`https://flagcdn.com/40x30/${prefix.code}.png 2x`}
+            width={20}
+            height={15}
+            alt={prefix.code.toUpperCase()}
+            style={{ flexShrink: 0, borderRadius: '2px', display: 'block' }}
+          />
+        )}
+        {prefix.type === 'icon' && (
+          <prefix.Icon size={16} color="var(--text2)" style={{ flexShrink: 0 }} />
+        )}
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {prefix.type === 'none' ? name : prefix.cleanName}
+        </span>
       </span>
 
       {/* Latency / status */}
