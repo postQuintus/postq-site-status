@@ -1,5 +1,6 @@
 import Header from '@/components/Header'
 import StatusClient from '@/components/StatusClient'
+import { overrideCdnServers } from '@/lib/cdn-override'
 import type { ServerStatus } from './api/status/route'
 
 async function getServers(): Promise<ServerStatus[]> {
@@ -72,6 +73,7 @@ export default async function StatusPage() {
     getServers(),
     getServices().catch(() => [] as ServerStatus[]),
   ])
+  await overrideCdnServers(servers)
   return (
     <main className="relative w-full min-h-screen">
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }} aria-hidden>
