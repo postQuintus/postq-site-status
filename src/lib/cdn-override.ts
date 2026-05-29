@@ -6,6 +6,7 @@ import type { ServerStatus } from '../../app/api/status/route'
 const CDN_ORIGIN_MAP: Record<string, string> = {
   'Россия #1': 'nl6.postq.space',
   'Россия #2': 'de2.postq.space',
+  'Россия #3': 'pl1.postq.space',
 }
 
 function checkTlsConnect(hostname: string): Promise<{ alive: boolean; latency: number }> {
