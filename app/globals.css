@@ -1,144 +1,211 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source "../app/**/*.{ts,tsx,js,jsx}";
+@source "../src/**/*.{ts,tsx,js,jsx}";
 
-/* GT Eesti Pro Display Fonts */
-@font-face {
-  font-family: 'GT Eesti Pro Display';
-  src: url('/fonts/gteestiprodisplay_thin.otf') format('opentype');
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
+/* ─── Design tokens → auto-generates font-display, font-text, bg-accent, etc. ── */
+@theme {
+  --color-bg:      #04000f;
+  --color-bg2:     #08001a;
+  --color-bg3:     #1a1a24;
+  --color-accent:  #cf00a3;
+  --color-accent2: #931b79;
+
+  --font-display: "GT Eesti Pro Display", system-ui, -apple-system, sans-serif;
+  --font-text:    "GT Eesti Pro Text",    system-ui, -apple-system, sans-serif;
+  --font-sans:    Inter,                  system-ui, -apple-system, sans-serif;
 }
 
+/* ─── Font faces ──────────────────────────────────────────────────────────────── */
 @font-face {
   font-family: 'GT Eesti Pro Display';
-  src: url('/fonts/gteestiprodisplay_light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GT Eesti Pro Display';
-  src: url('/fonts/gteestiprodisplay_regular.otf') format('opentype');
+  src: url('/fonts/gteestiprodisplay_regular.woff2') format('woff2'),
+       url('/fonts/gteestiprodisplay_regular.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: 'GT Eesti Pro Display';
-  src: url('/fonts/gteestiprodisplay_medium.otf') format('opentype');
+  src: url('/fonts/gteestiprodisplay_medium.woff2') format('woff2'),
+       url('/fonts/gteestiprodisplay_medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GT Eesti Pro Display';
+  src: url('/fonts/gteestiprodisplay_bold.woff2') format('woff2'),
+       url('/fonts/gteestiprodisplay_bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GT Eesti Pro Text';
+  src: url('/fonts/gteestiprotext_regular.woff2') format('woff2'),
+       url('/fonts/gteestiprotext_regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GT Eesti Pro Text';
+  src: url('/fonts/gteestiprotext_medium.woff2') format('woff2'),
+       url('/fonts/gteestiprotext_medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'GT Eesti Pro Display';
-  src: url('/fonts/gteestiprodisplay_bold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GT Eesti Pro Display';
-  src: url('/fonts/gteestiprodisplay_ultrabold.otf') format('opentype');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* GT Eesti Pro Text Fonts */
-@font-face {
-  font-family: 'GT Eesti Pro Text';
-  src: url('/fonts/gteestiprotext_regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GT Eesti Pro Text';
-  src: url('/fonts/gteestiprotext_medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GT Eesti Pro Text';
-  src: url('/fonts/gteestiprotext_bold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-html, body {
-  --font-display: 'GT Eesti Pro Display', system-ui, -apple-system, sans-serif;
-  --font-text: 'GT Eesti Pro Text', system-ui, -apple-system, sans-serif;
-  --font-mono: 'GT Eesti Pro Display', monospace;
-}
-
+/* ─── CSS vars (aliases + non-theme tokens) ───────────────────────────────────── */
 :root {
-  --bg: #04000f;
-  --bg2: #08001a;
-  --bg3: #1a1a24;
+  /* backwards-compat aliases so inline styles using var(--bg) / var(--accent) still work */
+  --bg:     var(--color-bg);
+  --bg2:    var(--color-bg2);
+  --bg3:    var(--color-bg3);
+  --accent: var(--color-accent);
+  --accent2: var(--color-accent2);
+
   --border: rgba(255, 255, 255, 0.08);
-  --text: #f4f4f5;
-  --text2: #a1a1aa;
-  --accent: #cf00a3;
-  --accent2: #931b79;
+  --text:   #f4f4f5;
+  --text2:  #a1a1aa;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
+/* ─── Reset & base — inside @layer base so utilities can override ─────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  html, body {
+    background: var(--color-bg);
+    color: var(--text);
+    font-family: var(--font-text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: rgba(207, 0, 163, 0.3); color: #fff; }
+
+  ::-webkit-scrollbar              { width: 6px; }
+  ::-webkit-scrollbar-track        { background: var(--color-bg2); }
+  ::-webkit-scrollbar-thumb        { background: rgba(207, 0, 163, 0.4); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover  { background: rgba(207, 0, 163, 0.7); }
+}
+
+/* ─── Reusable UI classes ─────────────────────────────────────────────────────── */
+.btn-accent {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  padding: 12px 36px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #cf00a3 0%, #931b79 100%);
+  color: #fff;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.trial-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(207, 0, 163, 0.25);
+  background: rgba(207, 0, 163, 0.07);
+  font-family: var(--font-text);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text);
+}
+.section-subtitle {
+  font-family: var(--font-text);
+  color: rgba(215, 194, 240, 0.45);
+}
+
+.nav-link {
+  font-family: var(--font-text);
+  font-size: 13px;
+  color: rgba(215, 194, 240, 0.5);
+  transition: color 0.18s;
+  cursor: pointer;
+  text-decoration: none;
+  background: none;
+  border: none;
   padding: 0;
 }
+.nav-link:hover { color: rgba(215, 194, 240, 0.9); }
 
-html {
-  scroll-behavior: smooth;
+.footer-link {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  color: rgba(215, 194, 240, 0.4);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.2s;
 }
+.footer-link:hover { color: rgba(215, 194, 240, 0.7); }
 
-html, body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'GT Eesti Pro Text', system-ui, -apple-system, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+/* ─── Animations ──────────────────────────────────────────────────────────────── */
+.btn-glow { animation: btn-pulse 3s ease-in-out infinite; }
 
-::selection {
-  background: rgba(207, 0, 163, 0.3);
-  color: #fff;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg2);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(207, 0, 163, 0.4);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(207, 0, 163, 0.7);
+@keyframes btn-pulse {
+  0%, 100% { box-shadow: 0 0 28px rgba(207, 0, 163, 0.4),  0 2px 12px rgba(0, 0, 0, 0.3); }
+  50%       { box-shadow: 0 0 52px rgba(207, 0, 163, 0.65), 0 2px 12px rgba(0, 0, 0, 0.3); }
 }
 
+/* Spotlight background orbs */
+.spotlight-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  will-change: transform;
+}
+.spotlight-orb-1 {
+  width: 70vw; height: 70vw;
+  background: radial-gradient(circle, rgba(207, 0, 163, 0.28) 0%, transparent 70%);
+  top: -20%; left: -15%;
+  animation: orb1 20s ease-in-out infinite alternate;
+}
+.spotlight-orb-2 {
+  width: 60vw; height: 60vw;
+  background: radial-gradient(circle, rgba(147, 27, 121, 0.22) 0%, transparent 70%);
+  top: 55%; right: -5%;
+  animation: orb2 25s ease-in-out infinite alternate;
+}
+@keyframes orb1 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(12vw, 18vh) scale(1.08); }
+}
+@keyframes orb2 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-14vw, -12vh) scale(1.1); }
+}
+
+/* ─── Status dot (server card pulse indicator) ────────────────────────────────── */
 @keyframes dot-ripple {
-  0% { transform: scale(1); opacity: 0.7; }
+  0%   { transform: scale(1); opacity: 0.7; }
   100% { transform: scale(3.5); opacity: 0; }
 }
-
 .dot-wrapper {
   display: inline-block;
 }
-
 .dot-pulse::after {
   content: '';
   position: absolute;
@@ -148,34 +215,23 @@ html, body {
   animation: dot-ripple 1.8s ease-out infinite;
 }
 
-.spotlight-orb {
+/* ─── VPN status widget (postq-site widget) ───────────────────────────────────── */
+@keyframes vpn-dot-ripple {
+  0%   { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+.vpn-dot-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+}
+.vpn-dot-pulse::after {
+  content: '';
   position: absolute;
+  inset: 0;
   border-radius: 50%;
-  filter: blur(90px);
-  will-change: transform, opacity;
-}
-.spotlight-orb-1 {
-  width: 60vw; height: 60vw;
-  background: radial-gradient(circle, rgba(207,0,163,0.22) 0%, transparent 70%);
-  top: -15%; left: -10%;
-  animation: orb1 18s ease-in-out infinite alternate;
-}
-.spotlight-orb-2 {
-  width: 50vw; height: 50vw;
-  background: radial-gradient(circle, rgba(147,27,121,0.16) 0%, transparent 70%);
-  bottom: -10%; right: 0;
-  animation: orb2 22s ease-in-out infinite alternate;
-}
-
-@keyframes orb1 {
-  0%   { transform: translate(0, 0) scale(1); opacity: 0.8; }
-  33%  { transform: translate(8vw, 12vh) scale(1.1); opacity: 1; }
-  66%  { transform: translate(20vw, 5vh) scale(0.95); opacity: 0.7; }
-  100% { transform: translate(5vw, 20vh) scale(1.05); opacity: 0.9; }
-}
-@keyframes orb2 {
-  0%   { transform: translate(0, 0) scale(1); opacity: 0.6; }
-  33%  { transform: translate(-12vw, -8vh) scale(1.15); opacity: 0.85; }
-  66%  { transform: translate(-5vw, -18vh) scale(0.9); opacity: 0.7; }
-  100% { transform: translate(-18vw, -5vh) scale(1.1); opacity: 0.8; }
+  background: #22c55e;
+  animation: vpn-dot-ripple 1.8s ease-out infinite;
 }

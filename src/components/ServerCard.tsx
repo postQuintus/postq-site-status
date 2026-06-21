@@ -62,23 +62,25 @@ export default function ServerCard({ name, alive, latency, showStatus }: ServerC
         alignItems: 'center',
         gap: '12px',
         padding: '14px 18px',
-        background: 'rgba(255,255,255,0.03)',
-        backdropFilter: 'blur(16px) saturate(150%)',
-        WebkitBackdropFilter: 'blur(16px) saturate(150%)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: '12px',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)',
-        transition: 'border-color 200ms ease, box-shadow 200ms ease',
+        background: 'rgba(255,255,255,0.04)',
+        backdropFilter: 'blur(40px)',
+        WebkitBackdropFilter: 'blur(40px)',
+        border: '1px solid rgba(207,0,163,0.06)',
+        borderRadius: '14px',
+        boxShadow: '0 2px 16px rgba(0,0,0,0.12)',
+        transition: 'border-color 250ms ease, background 250ms ease, box-shadow 250ms ease',
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget as HTMLDivElement
-        el.style.borderColor = 'rgba(207,0,163,0.25)'
-        el.style.boxShadow = '0 0 18px rgba(207,0,163,0.08), inset 0 1px 0 rgba(255,255,255,0.06)'
+        el.style.borderColor = 'rgba(207,0,163,0.14)'
+        el.style.background = 'rgba(207,0,163,0.06)'
+        el.style.boxShadow = '0 4px 28px rgba(207,0,163,0.08)'
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget as HTMLDivElement
-        el.style.borderColor = 'rgba(255,255,255,0.08)'
-        el.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.04)'
+        el.style.borderColor = 'rgba(207,0,163,0.06)'
+        el.style.background = 'rgba(255,255,255,0.04)'
+        el.style.boxShadow = '0 2px 16px rgba(0,0,0,0.12)'
       }}
     >
       {/* Status dot */}
