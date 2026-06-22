@@ -121,46 +121,34 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
         </div>
       )}
 
-      <motion.div
+      <motion.footer
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.9 }}
-        style={{
-          borderTop: '1px solid rgba(207,0,163,0.08)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '16px',
-          flexWrap: 'wrap',
-          rowGap: '8px',
-          padding: '28px 0 0',
-          marginTop: '60px',
-        }}
+        className="site-footer"
+        style={{ marginTop: '60px' }}
       >
         <a
           href="https://t.me/postq_vpn_bot"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', letterSpacing: '0.07em', color: 'rgba(215,194,240,0.4)', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.7)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.4)')}
+          className="footer-link"
         >
           @postq_vpn_bot
         </a>
         <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
-        <a
-          href="https://postq.space/privacy"
-          style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', letterSpacing: '0.07em', color: 'rgba(215,194,240,0.4)', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.2s' }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.7)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(215,194,240,0.4)')}
-        >
+        <a href="https://postq.space/privacy" className="footer-link">
           политика конфиденциальности
         </a>
         <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
-        <span style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: '11px', letterSpacing: '0.07em', color: 'rgba(215,194,240,0.35)', whiteSpace: 'nowrap' }}>
+        <a href="https://postq.space/terms" className="footer-link">
+          пользовательское соглашение
+        </a>
+        <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
+        <span className="footer-link" style={{ cursor: 'default' }}>
           © 2026 postq vpn
         </span>
-      </motion.div>
+      </motion.footer>
     </div>
   )
 }

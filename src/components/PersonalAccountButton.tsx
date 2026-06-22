@@ -6,8 +6,6 @@ export default function PersonalAccountButton() {
   return (
     <motion.a
       href="https://web.postq.space"
-      target="_blank"
-      rel="noopener noreferrer"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
