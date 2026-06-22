@@ -187,18 +187,18 @@
 .spotlight-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(70px);
+  filter: blur(48px);
   will-change: transform;
 }
 .spotlight-orb-1 {
   width: 70vw; height: 70vw;
-  background: radial-gradient(circle, rgba(207, 0, 163, 0.28) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(207, 0, 163, 0.26) 0%, transparent 70%);
   top: -20%; left: -15%;
   animation: orb1 20s ease-in-out infinite alternate;
 }
 .spotlight-orb-2 {
   width: 60vw; height: 60vw;
-  background: radial-gradient(circle, rgba(147, 27, 121, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(147, 27, 121, 0.20) 0%, transparent 70%);
   top: 55%; right: -5%;
   animation: orb2 25s ease-in-out infinite alternate;
 }
@@ -209,6 +209,14 @@
 @keyframes orb2 {
   from { transform: translate(0, 0) scale(1); }
   to   { transform: translate(-14vw, -12vh) scale(1.1); }
+}
+
+/* Respect user motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-orb      { animation: none !important; }
+  .btn-glow           { animation: none !important; }
+  .dot-pulse::after   { animation: none !important; }
+  .vpn-dot-pulse::after { animation: none !important; }
 }
 
 /* ─── Status dot (server card pulse indicator) ────────────────────────────────── */
