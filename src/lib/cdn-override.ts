@@ -4,9 +4,11 @@ import type { ServerStatus } from '../../app/api/status/route'
 // xray-checker can't reach these servers because Beeline CDN blocks non-Russian IPs.
 // We check their origin servers directly via TLS handshake instead.
 const CDN_ORIGIN_MAP: Record<string, string> = {
-  'Россия #1': 'nl6.postq.space',
-  'Россия #2': 'de2.postq.space',
+  'Россия #1': 'de3.postq.space',
+  'Россия #2': 'nl6.postq.space',
   'Россия #3': 'pl1.postq.space',
+  'Россия #4': 'de2.postq.space',
+  'Россия #5': 'de4.postq.space',
 }
 
 function checkTlsConnect(hostname: string): Promise<{ alive: boolean; latency: number }> {

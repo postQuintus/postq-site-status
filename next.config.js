@@ -4,7 +4,7 @@ const nextConfig = {
   compress: true,
   turbopack: {},
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    optimizePackageImports: ['lucide-react'],
   },
   async headers() {
     return [
@@ -16,12 +16,6 @@ const nextConfig = {
       },
       {
         source: '/icons/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
-      {
-        source: '/_next/static/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],

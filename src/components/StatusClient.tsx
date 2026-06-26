@@ -65,7 +65,7 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
     : 'Что-то не работает'
 
   return (
-    <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px', margin: '0 auto', padding: '100px 24px 80px' }}>
+    <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px', margin: '0 auto', padding: '100px 24px 0' }}>
       <motion.div
         initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
