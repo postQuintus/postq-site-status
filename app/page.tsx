@@ -76,7 +76,7 @@ export default async function StatusPage() {
   await overrideCdnServers(servers)
   return (
     <main className="relative w-full min-h-screen">
-      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }} aria-hidden>
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0, contain: 'paint' }} aria-hidden>
         <div className="spotlight-orb spotlight-orb-1" />
         <div className="spotlight-orb spotlight-orb-2" />
       </div>

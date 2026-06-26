@@ -151,6 +151,26 @@
 }
 .nav-link:hover { color: rgba(215, 194, 240, 0.9); }
 
+.server-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(207, 0, 163, 0.06);
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+  transition: border-color 250ms ease, background 250ms ease, box-shadow 250ms ease;
+  will-change: backdrop-filter;
+}
+.server-card:hover {
+  border-color: rgba(207, 0, 163, 0.14);
+  background: rgba(207, 0, 163, 0.06);
+  box-shadow: 0 4px 28px rgba(207, 0, 163, 0.08);
+}
+
 .site-footer {
   position: relative;
   z-index: 1;
