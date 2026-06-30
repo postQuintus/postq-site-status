@@ -2,7 +2,6 @@
 const nextConfig = {
   output: 'standalone',
   compress: true,
-  turbopack: {},
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },

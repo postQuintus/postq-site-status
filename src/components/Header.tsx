@@ -1,10 +1,8 @@
 'use client'
 
-import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
 import PersonalAccountButton from './PersonalAccountButton'
 
 const NAV_LINKS = [
@@ -15,7 +13,6 @@ const NAV_LINKS = [
 ]
 
 export default function Header() {
-    const pathname = usePathname()
     const [scrolled, setScrolled] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -84,23 +81,14 @@ export default function Header() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
                 >
-                    <Link
-                        href="/"
-                        className="flex items-center gap-2.5 no-underline"
-                        onClick={e => {
-                            if (pathname === '/') {
-                                e.preventDefault()
-                                window.scrollTo({ top: 0, behavior: 'smooth' })
-                            }
-                        }}
-                    >
+                    <a href="https://postq.space" className="flex items-center gap-2.5 no-underline">
                         <div className="relative h-8 w-8 shrink-0">
                             <Image src="/icons/icon.svg" alt="postq logo" fill className="object-contain" />
                         </div>
                         <span className="font-display" style={{ fontSize: '16px', color: 'var(--text)' }}>
                             postq vpn
                         </span>
-                    </Link>
+                    </a>
                 </motion.div>
 
                 {/* Desktop nav */}
