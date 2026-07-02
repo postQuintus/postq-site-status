@@ -1,8 +1,10 @@
 'use client'
 
 import Image from 'next/image'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import PersonalAccountButton from './PersonalAccountButton'
 
 const NAV_LINKS = [
@@ -12,9 +14,31 @@ const NAV_LINKS = [
     { label: 'Статус серверов',  href: '/',                             external: false },
 ]
 
+const USEFUL_LINKS = [
+    { label: 'Узнать мой IP', href: 'https://postq.space/ip' },
+]
+
 export default function Header() {
     const [scrolled, setScrolled] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
+    const [usefulOpen, setUsefulOpen] = useState(false)
+    const [usefulPos, setUsefulPos] = useState<{ top: number; left: number } | null>(null)
+    const [mounted, setMounted] = useState(false)
+    const usefulRef = useRef<HTMLDivElement>(null)
+    const hoverCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    function openUseful() {
+        if (hoverCloseTimer.current) clearTimeout(hoverCloseTimer.current)
+        const rect = usefulRef.current?.getBoundingClientRect()
+        if (rect) {
+            setUsefulPos({ top: rect.bottom + 22, left: rect.left + rect.width / 2 })
+        }
+        setUsefulOpen(true)
+    }
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 10)
@@ -117,6 +141,88 @@ export default function Header() {
                             </button>
                         )
                     ))}
+
+                    {/* Useful links dropdown */}
+                    <div
+                        ref={usefulRef}
+                        style={{ position: 'relative' }}
+                        onMouseEnter={openUseful}
+                        onMouseLeave={() => {
+                            hoverCloseTimer.current = setTimeout(() => setUsefulOpen(false), 150)
+                        }}
+                    >
+                        <button
+                            className="nav-link"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'default' }}
+                            aria-expanded={usefulOpen}
+                        >
+                            Полезное
+                            <motion.span
+                                animate={{ rotate: usefulOpen ? 180 : 0 }}
+                                transition={{ duration: 0.18 }}
+                                style={{ display: 'inline-flex' }}
+                            >
+                                <ChevronDown size={13} strokeWidth={2} />
+                            </motion.span>
+                        </button>
+
+                        {mounted && createPortal(
+                            <AnimatePresence>
+                                {usefulOpen && usefulPos && (
+                                    <div
+                                        onMouseEnter={openUseful}
+                                        onMouseLeave={() => {
+                                            hoverCloseTimer.current = setTimeout(() => setUsefulOpen(false), 150)
+                                        }}
+                                        style={{
+                                            position: 'fixed',
+                                            top: usefulPos.top,
+                                            left: usefulPos.left,
+                                            transform: 'translateX(-50%)',
+                                            zIndex: 60,
+                                        }}
+                                    >
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                                            transition={{ duration: 0.18, ease: 'easeOut' }}
+                                            style={{
+                                                minWidth: 170,
+                                                padding: 6,
+                                                borderRadius: 14,
+                                                background: 'rgba(255,255,255,0.04)',
+                                                backdropFilter: 'blur(40px)',
+                                                WebkitBackdropFilter: 'blur(40px)',
+                                                border: '1px solid rgba(207,0,163,0.07)',
+                                                boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
+                                            }}
+                                        >
+                                            {USEFUL_LINKS.map(link => (
+                                                <a
+                                                    key={link.href}
+                                                    href={link.href}
+                                                    onClick={() => setUsefulOpen(false)}
+                                                    className="nav-link"
+                                                    style={{
+                                                        display: 'block',
+                                                        padding: '8px 12px',
+                                                        borderRadius: 8,
+                                                        fontSize: '13px',
+                                                        whiteSpace: 'nowrap',
+                                                        textAlign: 'center',
+                                                    }}
+                                                >
+                                                    {link.label}
+                                                </a>
+                                            ))}
+                                        </motion.div>
+                                    </div>
+                                )}
+                            </AnimatePresence>,
+                            document.body
+                        )}
+                    </div>
                 </motion.nav>
 
                 {/* Right: account button + burger */}
@@ -188,6 +294,31 @@ export default function Header() {
                                     {link.label}
                                 </motion.button>
                             ))}
+
+                            <motion.p
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: NAV_LINKS.length * 0.05 }}
+                                className="font-text"
+                                style={{ fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', margin: '14px 0 4px' }}
+                            >
+                                Полезное
+                            </motion.p>
+                            {USEFUL_LINKS.map((link, i) => (
+                                <motion.a
+                                    key={link.href}
+                                    href={link.href}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: (NAV_LINKS.length + i) * 0.05 }}
+                                    onClick={() => setMobileOpen(false)}
+                                    className="nav-link"
+                                    style={{ display: 'block', fontSize: '15px', color: 'rgba(215,194,240,0.65)', padding: '10px 0', borderBottom: '1px solid rgba(207,0,163,0.06)', textAlign: 'left', width: '100%', borderRadius: 0 }}
+                                >
+                                    {link.label}
+                                </motion.a>
+                            ))}
+
                             <div style={{ marginTop: '12px' }}>
                                 <PersonalAccountButton />
                             </div>
