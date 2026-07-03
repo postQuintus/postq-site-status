@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import BottomOverscrollGuard from '@/components/BottomOverscrollGuard'
 
 export const metadata: Metadata = {
   title: 'postq vpn | статус серверов',
@@ -27,7 +28,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preload" href="/fonts/gteestiprodisplay_medium.woff2" as="font" type="font/woff2" crossOrigin="" />
         <link rel="preload" href="/fonts/gteestiprotext_regular.woff2" as="font" type="font/woff2" crossOrigin="" />
       </head>
-      <body>{children}</body>
+      <body>
+        <BottomOverscrollGuard />
+        {children}
+      </body>
     </html>
   )
 }
