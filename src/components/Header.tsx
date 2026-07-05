@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Globe, LifeBuoy } from 'lucide-react'
 import PersonalAccountButton from './PersonalAccountButton'
 
 const NAV_LINKS = [
@@ -15,7 +15,8 @@ const NAV_LINKS = [
 ]
 
 const USEFUL_LINKS = [
-    { label: 'Узнать мой IP', href: 'https://postq.space/ip' },
+    { label: 'Справочный центр', description: 'Инструкции и ответы на частые вопросы', href: 'https://postq.space/help', icon: LifeBuoy },
+    { label: 'Узнать мой IP', description: 'Проверьте свой текущий IP-адрес', href: 'https://postq.space/ip', icon: Globe },
 ]
 
 export default function Header() {
@@ -188,9 +189,12 @@ export default function Header() {
                                             exit={{ opacity: 0, y: -6, scale: 0.98 }}
                                             transition={{ duration: 0.18, ease: 'easeOut' }}
                                             style={{
-                                                minWidth: 170,
-                                                padding: 6,
-                                                borderRadius: 14,
+                                                minWidth: 400,
+                                                padding: 10,
+                                                borderRadius: 16,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: 4,
                                                 background: 'rgba(255,255,255,0.04)',
                                                 backdropFilter: 'blur(40px)',
                                                 WebkitBackdropFilter: 'blur(40px)',
@@ -198,24 +202,25 @@ export default function Header() {
                                                 boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
                                             }}
                                         >
-                                            {USEFUL_LINKS.map(link => (
-                                                <a
-                                                    key={link.href}
-                                                    href={link.href}
-                                                    onClick={() => setUsefulOpen(false)}
-                                                    className="nav-link"
-                                                    style={{
-                                                        display: 'block',
-                                                        padding: '8px 12px',
-                                                        borderRadius: 8,
-                                                        fontSize: '13px',
-                                                        whiteSpace: 'nowrap',
-                                                        textAlign: 'center',
-                                                    }}
-                                                >
-                                                    {link.label}
-                                                </a>
-                                            ))}
+                                            {USEFUL_LINKS.map(link => {
+                                                const Icon = link.icon
+                                                return (
+                                                    <a
+                                                        key={link.href}
+                                                        href={link.href}
+                                                        onClick={() => setUsefulOpen(false)}
+                                                        className="useful-link-row"
+                                                    >
+                                                        <span className="useful-link-icon">
+                                                            <Icon size={17} strokeWidth={2} />
+                                                        </span>
+                                                        <span>
+                                                            <span className="useful-link-title">{link.label}</span>
+                                                            <span className="useful-link-desc">{link.description}</span>
+                                                        </span>
+                                                    </a>
+                                                )
+                                            })}
                                         </motion.div>
                                     </div>
                                 )}
