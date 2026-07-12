@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import ServerCard from './ServerCard'
+import Footer from './Footer'
 import type { ServerStatus } from '../../app/api/status/route'
 
 interface Props {
@@ -121,34 +122,9 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
         </div>
       )}
 
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.9 }}
-        className="site-footer"
-        style={{ marginTop: '60px' }}
-      >
-        <a
-          href="https://t.me/postq_vpn_bot"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-link"
-        >
-          @postq_vpn_bot
-        </a>
-        <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
-        <a href="https://postq.space/privacy" className="footer-link">
-          политика конфиденциальности
-        </a>
-        <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
-        <a href="https://postq.space/terms" className="footer-link">
-          пользовательское соглашение
-        </a>
-        <span style={{ color: 'rgba(215,194,240,0.2)', fontSize: '11px', userSelect: 'none' }}>·</span>
-        <span className="footer-link" style={{ cursor: 'default' }}>
-          © 2026 postq vpn
-        </span>
-      </motion.footer>
+      <div style={{ marginTop: '60px' }}>
+        <Footer animate />
+      </div>
     </div>
   )
 }

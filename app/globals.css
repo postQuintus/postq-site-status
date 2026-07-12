@@ -209,17 +209,106 @@
   box-shadow: 0 4px 28px rgba(207, 0, 163, 0.08);
 }
 
+/* ─── Site footer (синхронизирован с postq-site) ─────────────────────────────── */
+/* Стеклянный блок в языке шапки: radius 14, полупрозрачный фон + blur,
+   розовая рамка и мягкая тень. */
 .site-footer {
   position: relative;
   z-index: 1;
-  border-top: 1px solid rgba(207, 0, 163, 0.08);
+  /* Боковые отступы как у контентного контейнера (px-6), блок — max-w-6xl */
+  padding: 24px 24px 40px;
+}
+.footer-inner {
+  max-width: 1152px;
+  margin: 0 auto;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(207, 0, 163, 0.07);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+  padding: 36px 32px 24px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 40px;
+}
+/* Ритм бренд-блока: логотип и слоган — одна группа (12px), кнопка-CTA
+   отделена сильнее (20px), соцсети держатся при кнопке (12px). */
+.footer-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.footer-brand .install-guide-btn { margin-top: 8px; }
+.footer-brand-row { display: flex; align-items: center; gap: 10px; }
+.footer-tagline {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(215, 194, 240, 0.45);
+  max-width: 300px;
+  margin: 0;
+}
+.footer-col { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+.footer-col-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+.footer-nav-link {
+  font-size: 13px;
+  color: rgba(215, 194, 240, 0.55);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+.footer-nav-link:hover { color: var(--text); text-decoration: none; }
+.footer-bottom {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
   flex-wrap: wrap;
-  row-gap: 8px;
-  padding: 28px 24px 44px;
+  gap: 8px 16px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.footer-bottom-links { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.footer-socials { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.install-guide-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(207, 0, 163, 0.28);
+  color: var(--accent);
+  font-family: var(--font-text);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.install-guide-btn:hover {
+  background: rgba(207, 0, 163, 0.1);
+  border-color: rgba(207, 0, 163, 0.45);
+  text-decoration: none;
+}
+@media (max-width: 900px) {
+  /* Бренд на всю ширину, «Продукт» и «Помощь» остаются рядом — структура не схлопывается в одну колонку */
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 24px; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .footer-inner { padding: 28px 20px 20px; }
+  /* Нижняя строка складывается в аккуратную колонку: без висящих точек и рваных переносов */
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 32px;
+    padding-top: 18px;
+  }
+  .footer-bottom-links { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .footer-bottom-links .footer-dot { display: none; }
 }
 
 .footer-link {
