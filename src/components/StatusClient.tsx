@@ -3,12 +3,23 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import ServerCard from './ServerCard'
+import ServerGroup from './ServerGroup'
 import Footer from './Footer'
 import type { ServerStatus } from '../../app/api/status/route'
 
 interface Props {
   initialServers: ServerStatus[]
   initialServices: ServerStatus[]
+}
+
+/** Группирует "Россия #1", "Россия #2" и т.п. под общим именем локации без номера. */
+function groupByLocation(list: ServerStatus[]): [string, ServerStatus[]][] {
+  const groups = new Map<string, ServerStatus[]>()
+  for (const server of list) {
+    const base = server.name.replace(/\s*#\d+\s*$/, '').trim()
+    groups.set(base, [...(groups.get(base) ?? []), server])
+  }
+  return Array.from(groups.entries())
 }
 
 export default function StatusClient({ initialServers, initialServices = [] }: Props) {
@@ -29,6 +40,8 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
         { name: '🇳🇱 Нидерланды', protocol: 'vless', alive: false, latency: 0 },
         { name: '🇵🇱 Польша', protocol: 'vless', alive: true, latency: 387 },
         { name: '🇷🇺 Россия #1', protocol: 'vless', alive: true, latency: 440 },
+        { name: '🇷🇺 Россия #2', protocol: 'vless', alive: true, latency: 402 },
+        { name: '🇷🇺 Россия #3', protocol: 'vless', alive: false, latency: 0 },
       ])
       return
     }
@@ -102,8 +115,12 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
               <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '11px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', marginBottom: '8px' }}>
                 postq vpn
               </p>
-              <div className="server-grid">
-                {servers.map((server, i) => <ServerCard key={i} {...server} />)}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {groupByLocation(servers).map(([base, group]) =>
+                  group.length > 1
+                    ? <ServerGroup key={base} baseName={base} servers={group} />
+                    : <ServerCard key={base} {...group[0]} />
+                )}
               </div>
             </div>
           )}

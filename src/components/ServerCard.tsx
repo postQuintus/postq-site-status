@@ -15,12 +15,12 @@ const EMOJI_ICONS: Partial<Record<number, LucideIcon>> = {
   0x1F916: Bot,   // 🤖
 }
 
-type NamePrefix =
+export type NamePrefix =
   | { type: 'flag'; code: string; cleanName: string }
   | { type: 'icon'; Icon: LucideIcon; cleanName: string }
   | { type: 'none'; cleanName: string }
 
-function parseNamePrefix(name: string): NamePrefix {
+export function parseNamePrefix(name: string): NamePrefix {
   const chars = [...name]
   if (chars.length === 0) return { type: 'none', cleanName: name }
 
