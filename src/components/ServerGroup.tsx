@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import ServerCard, { parseNamePrefix } from './ServerCard'
@@ -15,6 +15,7 @@ export default function ServerGroup({ baseName, servers }: ServerGroupProps) {
   const [open, setOpen] = useState(false)
   const online = servers.filter((s) => s.alive).length
   const total = servers.length
+  const partial = online > 0 && online < total
   const dotColor = online === total ? '#22c55e' : online > 0 ? '#f59e0b' : '#ef4444'
   const prefix = parseNamePrefix(baseName)
 
@@ -28,7 +29,7 @@ export default function ServerGroup({ baseName, servers }: ServerGroupProps) {
       >
         <span
           className={online > 0 ? 'dot-wrapper dot-pulse' : 'dot-wrapper'}
-          style={{ flexShrink: 0, position: 'relative', width: '8px', height: '8px' }}
+          style={{ flexShrink: 0, position: 'relative', width: '8px', height: '8px', '--dot-color': dotColor, '--dot-pulse-opacity': partial ? 0.35 : 0.7 } as CSSProperties}
         >
           <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: dotColor, boxShadow: `0 0 6px ${dotColor}b3` }} />
         </span>

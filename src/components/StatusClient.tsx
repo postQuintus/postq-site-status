@@ -12,13 +12,15 @@ interface Props {
   initialServices: ServerStatus[]
 }
 
-/** Группирует "Россия #1", "Россия #2" и т.п. под общим именем локации без номера. */
+/** Группирует "Россия #1", "Россия #2" и т.п. под общим именем локации без номера.
+ *  Остальные локации не сворачиваются, даже если имена совпадают. */
 function groupByLocation(list: ServerStatus[]): [string, ServerStatus[]][] {
   const groups = new Map<string, ServerStatus[]>()
-  for (const server of list) {
+  list.forEach((server, i) => {
     const base = server.name.replace(/\s*#\d+\s*$/, '').trim()
-    groups.set(base, [...(groups.get(base) ?? []), server])
-  }
+    const key = base.includes('Россия') ? base : `${server.name}__${i}`
+    groups.set(key, [...(groups.get(key) ?? []), server])
+  })
   return Array.from(groups.entries())
 }
 
