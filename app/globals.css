@@ -209,6 +209,16 @@
   box-shadow: 0 4px 28px rgba(207, 0, 163, 0.08);
 }
 
+.server-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+@media (max-width: 480px) {
+  /* Две колонки слишком тесно сжимают имя сервера и задержку на узких экранах */
+  .server-grid { grid-template-columns: 1fr; }
+}
+
 /* ─── Site footer (синхронизирован с postq-site) ─────────────────────────────── */
 /* Стеклянный блок в языке шапки (liquid glass pill): radius 14,
    полупрозрачный фон + blur, розовая рамка и мягкая тень. */

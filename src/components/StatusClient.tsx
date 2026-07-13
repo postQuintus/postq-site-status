@@ -55,10 +55,6 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
   const allOffline = total > 0 && online === 0
   const loading = total === 0
 
-  const isPremium = (name: string) => name.includes('🇷🇺')
-  const premiumServers = servers.filter((s) => isPremium(s.name))
-  const basicServers = servers.filter((s) => !isPremium(s.name))
-
   const statusHeadline = loading
     ? 'загружаем данные...'
     : allOnline ? 'Всё работает'
@@ -66,6 +62,7 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
     : 'Что-то не работает'
 
   return (
+    <>
     <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px', margin: '0 auto', padding: '100px 24px 0' }}>
       <motion.div
         initial={{ opacity: 0, y: 22 }}
@@ -91,27 +88,22 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
       {servers.length > 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {services.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {services.map((svc, i) => <ServerCard key={i} {...svc} showStatus />)}
-            </div>
-          )}
-          {basicServers.length > 0 && (
             <div>
               <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '11px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', marginBottom: '8px' }}>
-                postq vpn basic
+                инфраструктура
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {basicServers.map((server, i) => <ServerCard key={i} {...server} />)}
+                {services.map((svc, i) => <ServerCard key={i} {...svc} showStatus />)}
               </div>
             </div>
           )}
-          {premiumServers.length > 0 && (
+          {servers.length > 0 && (
             <div>
               <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '11px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', marginBottom: '8px' }}>
-                postq vpn premium
+                postq vpn
               </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {premiumServers.map((server, i) => <ServerCard key={i} {...server} />)}
+              <div className="server-grid">
+                {servers.map((server, i) => <ServerCard key={i} {...server} />)}
               </div>
             </div>
           )}
@@ -121,10 +113,11 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
           Данные загружаются. Пожалуйста, подождите...
         </div>
       )}
-
-      <div style={{ marginTop: '60px' }}>
-        <Footer animate />
-      </div>
     </div>
+
+    <div style={{ marginTop: '60px' }}>
+      <Footer animate />
+    </div>
+    </>
   )
 }
