@@ -14,10 +14,10 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: 'Продукт',
     links: [
+      { label: 'Личный кабинет', href: 'https://web.postq.space' },
       { label: 'Цены', href: 'https://postq.space/#pricing' },
       { label: 'Как подключить', href: 'https://postq.space/#howto' },
       { label: 'FAQ', href: 'https://postq.space/#faq' },
-      { label: 'Личный кабинет', href: 'https://web.postq.space' },
       { label: 'Статус серверов', href: 'https://status.postq.space' },
     ],
   },
@@ -55,34 +55,36 @@ function FooterContent() {
             <span className="font-display" style={{ fontSize: '16px', color: 'var(--text)' }}>postq vpn</span>
           </div>
           <p className="footer-tagline">
-            Шифрует весь трафик и открывает доступ к любым сайтам. Серверы по всему миру, без логов и слежки.
+            Доступ к любым сайтам. Без логов и слежки.
           </p>
-          <a
-            href="https://t.me/postq_vpn_bot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="install-guide-btn"
-          >
-            <Send size={15} strokeWidth={2} /> @postq_vpn_bot
-          </a>
-          <div className="footer-socials">
+          <div className="footer-actions">
             <a
-              href="https://t.me/postq_news"
+              href="https://t.me/postq_vpn_bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="footer-nav-link"
+              className="install-guide-btn"
             >
-              Новости в Telegram
+              <Send size={15} strokeWidth={2} /> Бот в Telegram
             </a>
-            <Dot />
-            <a
-              href="https://www.threads.com/@postq_vpn"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-nav-link"
-            >
-              Threads
-            </a>
+            <div className="footer-socials">
+              <a
+                href="https://t.me/postq_news"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-nav-link"
+              >
+                Новости в Telegram
+              </a>
+              <Dot />
+              <a
+                href="https://www.threads.com/@postq_vpn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-nav-link"
+              >
+                Threads
+              </a>
+            </div>
           </div>
         </div>
 
@@ -104,6 +106,8 @@ function FooterContent() {
           <a href="https://postq.space/privacy" className="footer-link">политика конфиденциальности</a>
           <Dot />
           <a href="https://postq.space/terms" className="footer-link">пользовательское соглашение</a>
+          <Dot />
+          <a href="mailto:hello@postq.space" className="footer-link">hello@postq.space</a>
         </div>
       </div>
     </div>

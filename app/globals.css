@@ -210,8 +210,8 @@
 }
 
 /* ─── Site footer (синхронизирован с postq-site) ─────────────────────────────── */
-/* Стеклянный блок в языке шапки: radius 14, полупрозрачный фон + blur,
-   розовая рамка и мягкая тень. */
+/* Стеклянный блок в языке шапки (liquid glass pill): radius 14,
+   полупрозрачный фон + blur, розовая рамка и мягкая тень. */
 .site-footer {
   position: relative;
   z-index: 1;
@@ -229,15 +229,33 @@
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
   padding: 36px 32px 24px;
 }
+@media (max-width: 560px) {
+  /* Карточка садится вплотную к бокам и низу экрана, но боковой паддинг
+     внутри остаётся 24px — как у остальных контентных секций (px-6/1.5rem),
+     чтобы текст футера не съезжал ближе к краю, чем весь прочий контент. */
+  .site-footer { padding: 24px 0 0; }
+  .footer-inner { border-radius: 14px 14px 0 0; padding: 28px 24px 20px; }
+}
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr;
-  gap: 40px;
+  /* Колонки-ссылки шириной по контенту — иначе при неравной длине текстов
+     («Продукт» короче «Помощь») получается разный лишний отступ справа
+     от самого длинного элемента внутри каждой колонки. Бренд — единственная
+     резиновая (1fr) колонка, поэтому один и тот же однострочный макет держится
+     от десктопа до планшета — только зазор сужается на промежуточных ширинах
+     (media query ниже), а не растёт вместе с шириной окна: карточка всё равно
+     не шире 1152px, поэтому от vw-масштабирования отступ на широких мониторах
+     раздувался сильнее, чем нужно. */
+  grid-template-columns: 1fr max-content max-content;
+  column-gap: 64px;
+  row-gap: 40px;
 }
-/* Ритм бренд-блока: логотип и слоган — одна группа (12px), кнопка-CTA
-   отделена сильнее (20px), соцсети держатся при кнопке (12px). */
+/* Ритм бренд-блока: логотип и слоган — одна группа (12px), ряд кнопок
+   прижат к низу колонки (auto). */
 .footer-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
-.footer-brand .install-guide-btn { margin-top: 8px; }
+/* Кнопка бота + строка соцсетей-ссылок под ней, группа прижата к низу колонки */
+.footer-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: auto; }
+.footer-socials { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
 .footer-brand-row { display: flex; align-items: center; gap: 10px; }
 .footer-tagline {
   font-size: 13px;
@@ -250,8 +268,9 @@
 .footer-col-title {
   font-family: var(--font-display);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--text);
+  text-transform: lowercase;
   margin: 0 0 6px;
 }
 .footer-nav-link {
@@ -272,7 +291,6 @@
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 .footer-bottom-links { display: flex; flex-wrap: wrap; gap: 8px 16px; }
-.footer-socials { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
 .install-guide-btn {
   display: inline-flex;
   align-items: center;
@@ -293,34 +311,45 @@
   text-decoration: none;
 }
 @media (max-width: 900px) {
-  /* Бренд на всю ширину, «Продукт» и «Помощь» остаются рядом — структура не схлопывается в одну колонку */
-  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 24px; }
+  /* Сужаем зазор перед тем, как на 680px колонки уйдут в раздельную строку под брендом */
+  .footer-grid { column-gap: 40px; }
+}
+@media (max-width: 680px) {
+  /* Ниже этой ширины бренд-колонке уже не хватает места рядом с двумя
+     колонками ссылок в одну строку — переносим её на всю ширину сверху,
+     а «Продукт»/«Помощь» остаются одной строкой под ней. */
+  .footer-inner { padding: 32px 28px 20px; }
+  /* space-between разводит две колонки к краям строки вместо того, чтобы
+     оставлять один большой пустой хвост справа после узких max-content колонок */
+  .footer-grid { grid-template-columns: max-content max-content; justify-content: space-between; column-gap: 56px; row-gap: 40px; }
   .footer-brand { grid-column: 1 / -1; }
+  /* Высота бренд-блока здесь по контенту, auto схлопывается — возвращаем фиксированный отступ */
+  .footer-actions { margin-top: 8px; }
 }
 @media (max-width: 560px) {
-  .footer-inner { padding: 28px 20px 20px; }
   /* Нижняя строка складывается в аккуратную колонку: без висящих точек и рваных переносов */
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    margin-top: 32px;
-    padding-top: 18px;
+    margin-top: 40px;
+    padding-top: 22px;
   }
   .footer-bottom-links { flex-direction: column; align-items: flex-start; gap: 8px; }
   .footer-bottom-links .footer-dot { display: none; }
 }
 
+/* Тот же цвет в дефолте и на ховере, что у .footer-nav-link — единая палитра ссылок футера */
 .footer-link {
   font-family: var(--font-display);
   font-size: 11px;
   letter-spacing: 0.07em;
-  color: rgba(215, 194, 240, 0.4);
+  color: rgba(215, 194, 240, 0.55);
   white-space: nowrap;
   text-decoration: none;
   transition: color 0.2s;
 }
-.footer-link:hover { color: rgba(215, 194, 240, 0.7); }
+a.footer-link:hover { color: var(--text); }
 
 /* ─── Animations ──────────────────────────────────────────────────────────────── */
 .btn-glow { animation: btn-pulse 3s ease-in-out infinite; }
