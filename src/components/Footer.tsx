@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Send } from 'lucide-react'
+import PaymentIcons from '@/components/PaymentIcons'
 
 /**
  * Футер, синхронизированный с postq-site (src/components/Footer.tsx).
@@ -54,19 +54,21 @@ function FooterContent() {
             </div>
             <span className="font-display" style={{ fontSize: '16px', color: 'var(--text)' }}>postq vpn</span>
           </div>
+          <span className="footer-copyright">© 2026 postq vpn</span>
           <p className="footer-tagline">
             Доступ к любым сайтам. Без логов и слежки.
           </p>
           <div className="footer-actions">
-            <a
-              href="https://t.me/postq_vpn_bot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="install-guide-btn"
-            >
-              <Send size={15} strokeWidth={2} /> Бот в Telegram
-            </a>
             <div className="footer-socials">
+              <a
+                href="https://t.me/postq_vpn_bot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-nav-link"
+              >
+                Бот в Telegram
+              </a>
+              <Dot />
               <a
                 href="https://t.me/postq_news"
                 target="_blank"
@@ -101,7 +103,6 @@ function FooterContent() {
       </div>
 
       <div className="footer-bottom">
-        <span className="footer-link" style={{ cursor: 'default' }}>© 2026 postq vpn</span>
         <div className="footer-bottom-links">
           <a href="https://postq.space/privacy" className="footer-link">политика конфиденциальности</a>
           <Dot />
@@ -109,6 +110,7 @@ function FooterContent() {
           <Dot />
           <a href="mailto:hello@postq.space" className="footer-link">hello@postq.space</a>
         </div>
+        <PaymentIcons />
       </div>
     </div>
   )
