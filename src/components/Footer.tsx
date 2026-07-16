@@ -10,25 +10,26 @@ import PaymentIcons from '@/components/PaymentIcons'
  * на разделы основного сайта — абсолютные, на postq.space.
  */
 
-const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
+const COLUMNS: { title: string; links: { label: string; href: string; external?: boolean }[] }[] = [
   {
     title: 'Продукт',
     links: [
-      { label: 'Личный кабинет', href: 'https://web.postq.space' },
-      { label: 'Цены', href: 'https://postq.space/#pricing' },
-      { label: 'Как подключить', href: 'https://postq.space/#howto' },
-      { label: 'FAQ', href: 'https://postq.space/#faq' },
+      { label: 'Личный кабинет', href: 'https://web.postq.space', external: true },
+      { label: 'Цены', href: 'https://postq.space/#pricing', external: true },
+      { label: 'Как подключить', href: 'https://postq.space/#howto', external: true },
+      { label: 'FAQ', href: 'https://postq.space/#faq', external: true },
+      // Self-link — the status page never needs to leave itself for this one.
       { label: 'Статус серверов', href: 'https://status.postq.space' },
     ],
   },
   {
     title: 'Помощь',
     links: [
-      { label: 'Справочный центр', href: 'https://postq.space/help' },
-      { label: 'VPN на роутере', href: 'https://postq.space/help/vpn-on-router' },
-      { label: 'Генератор конфига XKeen', href: 'https://postq.space/keys' },
-      { label: 'Узнать мой IP', href: 'https://postq.space/ip' },
-      { label: 'Поддержка', href: 'https://t.me/postq_vpn_support_bot' },
+      { label: 'Справочный центр', href: 'https://postq.space/help', external: true },
+      { label: 'VPN на роутере', href: 'https://postq.space/help/vpn-on-router', external: true },
+      { label: 'Генератор конфига XKeen', href: 'https://postq.space/keys', external: true },
+      { label: 'Узнать мой IP', href: 'https://postq.space/ip', external: true },
+      { label: 'Поддержка', href: 'https://t.me/postq_vpn_support_bot', external: true },
     ],
   },
 ]
@@ -94,7 +95,13 @@ function FooterContent() {
           <nav key={col.title} className="footer-col" aria-label={col.title}>
             <p className="footer-col-title">{col.title}</p>
             {col.links.map(link => (
-              <a key={link.href} href={link.href} className="footer-nav-link">
+              <a
+                key={link.href}
+                href={link.href}
+                target={link.external ? '_blank' : undefined}
+                rel={link.external ? 'noopener noreferrer' : undefined}
+                className="footer-nav-link"
+              >
                 {link.label}
               </a>
             ))}
@@ -104,9 +111,9 @@ function FooterContent() {
 
       <div className="footer-bottom">
         <div className="footer-bottom-links">
-          <a href="https://postq.space/privacy" className="footer-link">политика конфиденциальности</a>
+          <a href="https://postq.space/privacy" target="_blank" rel="noopener noreferrer" className="footer-link">политика конфиденциальности</a>
           <Dot />
-          <a href="https://postq.space/terms" className="footer-link">пользовательское соглашение</a>
+          <a href="https://postq.space/terms" target="_blank" rel="noopener noreferrer" className="footer-link">пользовательское соглашение</a>
           <Dot />
           <a href="mailto:hello@postq.space" className="footer-link">hello@postq.space</a>
         </div>

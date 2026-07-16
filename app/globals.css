@@ -68,8 +68,33 @@
 
   --border: rgba(255, 255, 255, 0.08);
   --text:   #f4f4f5;
-  --text2:  #a1a1aa;
+  --text2:  rgba(215, 194, 240, 0.8);
+
+  /* Glass design system — single source of truth for every translucent
+     "frosted" surface on the site. Two tiers, one shade each. */
+  --glass-border:    rgba(207, 0, 163, 0.08);
+  --glass-bg:        rgba(255, 255, 255, 0.04);
+  --glass-bg-nested: rgba(255, 255, 255, 0.03);
+  --glass-blur:      16px;
 }
+
+/* ─── Glass design system ─────────────────────────────────────────────────────
+   `.glass` — a surface sitting directly on the page background. Blurs the
+   real backdrop at --glass-blur (16px default). Surfaces that need a
+   different radius override --glass-blur locally; the footer needs a much
+   larger radius since it's a big area, and server cards keep a lighter blur
+   since there can be a dozen of them on screen at once (GPU blur cost scales
+   with instance count). */
+.glass,
+.footer-inner,
+.server-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+}
+.footer-inner { --glass-blur: 40px; }
+.server-card  { --glass-blur: 12px; }
 
 /* ─── Reset & base — inside @layer base so utilities can override ─────────────── */
 @layer base {
@@ -112,36 +137,10 @@
   text-decoration: none;
 }
 
-.trial-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(207, 0, 163, 0.25);
-  background: rgba(207, 0, 163, 0.07);
-  font-family: var(--font-text);
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.75);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-
-.section-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: 700;
-  color: var(--text);
-}
-.section-subtitle {
-  font-family: var(--font-text);
-  color: rgba(215, 194, 240, 0.45);
-}
-
 .nav-link {
   font-family: var(--font-text);
   font-size: 13px;
-  color: rgba(215, 194, 240, 0.5);
+  color: rgba(215, 194, 240, 0.68);
   transition: color 0.18s;
   cursor: pointer;
   text-decoration: none;
@@ -178,13 +177,13 @@
   font-family: var(--font-text);
   font-size: 13.5px;
   font-weight: 500;
-  color: rgba(215, 194, 240, 0.85);
+  color: rgba(215, 194, 240, 0.9);
 }
 .useful-link-desc {
   display: block;
   font-family: var(--font-text);
   font-size: 12px;
-  color: rgba(215, 194, 240, 0.4);
+  color: rgba(215, 194, 240, 0.63);
   margin-top: 2px;
   white-space: normal;
 }
@@ -194,10 +193,6 @@
   align-items: center;
   gap: 12px;
   padding: 14px 18px;
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(207, 0, 163, 0.06);
   border-radius: 14px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
   transition: border-color 250ms ease, background 250ms ease, box-shadow 250ms ease;
@@ -222,10 +217,6 @@
   max-width: 1152px;
   margin: 0 auto;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  -webkit-backdrop-filter: blur(40px);
-  backdrop-filter: blur(40px);
-  border: 1px solid rgba(207, 0, 163, 0.07);
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
   padding: 36px 32px 24px;
 }
@@ -259,12 +250,12 @@
 .footer-brand-row { display: flex; align-items: center; gap: 10px; }
 .footer-copyright {
   font-size: 13px;
-  color: rgba(215, 194, 240, 0.45);
+  color: rgba(215, 194, 240, 0.66);
 }
 .footer-tagline {
   font-size: 13px;
   line-height: 1.6;
-  color: rgba(215, 194, 240, 0.45);
+  color: rgba(215, 194, 240, 0.66);
   max-width: 300px;
   margin: 0;
 }
@@ -279,7 +270,7 @@
 }
 .footer-nav-link {
   font-size: 13px;
-  color: rgba(215, 194, 240, 0.55);
+  color: rgba(215, 194, 240, 0.7);
   text-decoration: none;
   transition: color 0.18s ease;
 }
@@ -333,7 +324,7 @@
   font-family: var(--font-display);
   font-size: 11px;
   letter-spacing: 0.07em;
-  color: rgba(215, 194, 240, 0.55);
+  color: rgba(215, 194, 240, 0.7);
   white-space: nowrap;
   text-decoration: none;
   transition: color 0.2s;
@@ -341,29 +332,35 @@
 a.footer-link:hover { color: var(--text); }
 
 /* ─── Animations ──────────────────────────────────────────────────────────────── */
-.btn-glow { animation: btn-pulse 3s ease-in-out infinite; }
 
-@keyframes btn-pulse {
-  0%, 100% { box-shadow: 0 0 28px rgba(207, 0, 163, 0.4),  0 2px 12px rgba(0, 0, 0, 0.3); }
-  50%       { box-shadow: 0 0 52px rgba(207, 0, 163, 0.65), 0 2px 12px rgba(0, 0, 0, 0.3); }
-}
-
-/* Spotlight background orbs */
+/* Spotlight background orbs.
+   No filter: blur() here — the gaussian falloff is baked into the gradient
+   stops instead. A blurred vw-sized layer costs a huge GPU raster and forces
+   every backdrop-filter surface above it to re-blur each animation frame. */
 .spotlight-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(48px);
   will-change: transform;
 }
 .spotlight-orb-1 {
   width: 70vw; height: 70vw;
-  background: radial-gradient(circle, rgba(207, 0, 163, 0.26) 0%, transparent 70%);
+  background: radial-gradient(circle,
+    rgba(207, 0, 163, 0.25) 0%,
+    rgba(207, 0, 163, 0.19) 25%,
+    rgba(207, 0, 163, 0.10) 45%,
+    rgba(207, 0, 163, 0.035) 60%,
+    transparent 74%);
   top: -20%; left: -15%;
   animation: orb1 20s ease-in-out infinite alternate;
 }
 .spotlight-orb-2 {
   width: 60vw; height: 60vw;
-  background: radial-gradient(circle, rgba(147, 27, 121, 0.20) 0%, transparent 70%);
+  background: radial-gradient(circle,
+    rgba(147, 27, 121, 0.19) 0%,
+    rgba(147, 27, 121, 0.145) 25%,
+    rgba(147, 27, 121, 0.08) 45%,
+    rgba(147, 27, 121, 0.027) 60%,
+    transparent 74%);
   top: 55%; right: -5%;
   animation: orb2 25s ease-in-out infinite alternate;
 }
@@ -379,9 +376,7 @@ a.footer-link:hover { color: var(--text); }
 /* Respect user motion preference */
 @media (prefers-reduced-motion: reduce) {
   .spotlight-orb      { animation: none !important; }
-  .btn-glow           { animation: none !important; }
   .dot-pulse::after   { animation: none !important; }
-  .vpn-dot-pulse::after { animation: none !important; }
 }
 
 /* ─── Status dot (server card pulse indicator) ────────────────────────────────── */
@@ -399,25 +394,4 @@ a.footer-link:hover { color: var(--text); }
   border-radius: 50%;
   background: var(--dot-color, #22c55e);
   animation: dot-ripple 1.8s ease-out infinite;
-}
-
-/* ─── VPN status widget (postq-site widget) ───────────────────────────────────── */
-@keyframes vpn-dot-ripple {
-  0%   { transform: scale(1); opacity: 0.7; }
-  100% { transform: scale(3.5); opacity: 0; }
-}
-.vpn-dot-wrapper {
-  position: relative;
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  flex-shrink: 0;
-}
-.vpn-dot-pulse::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #22c55e;
-  animation: vpn-dot-ripple 1.8s ease-out infinite;
 }

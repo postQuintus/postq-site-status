@@ -8,10 +8,9 @@ import { ChevronDown, Globe, LifeBuoy } from 'lucide-react'
 import PersonalAccountButton from './PersonalAccountButton'
 
 const NAV_LINKS = [
-    { label: 'Цены',             href: 'https://postq.space/#pricing', external: true  },
-    { label: 'Как подключить',   href: 'https://postq.space/#howto',   external: true  },
-    { label: 'FAQ',               href: 'https://postq.space/#faq',     external: true  },
-    { label: 'Статус серверов',  href: '/',                             external: false },
+    { label: 'Цены',            href: 'https://postq.space/#pricing' },
+    { label: 'Как подключить',  href: 'https://postq.space/#howto'   },
+    { label: 'FAQ',              href: 'https://postq.space/#faq'     },
 ]
 
 const USEFUL_LINKS = [
@@ -48,29 +47,20 @@ export default function Header() {
     }, [])
 
     useEffect(() => {
+        if (!usefulOpen) return
+        const onClickOutside = (e: MouseEvent) => {
+            if (usefulRef.current && !usefulRef.current.contains(e.target as Node)) {
+                setUsefulOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', onClickOutside)
+        return () => document.removeEventListener('mousedown', onClickOutside)
+    }, [usefulOpen])
+
+    useEffect(() => {
         if (mobileOpen) setMobileOpen(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scrolled])
-
-    function handleNavClick(e: React.MouseEvent, link: typeof NAV_LINKS[0]) {
-        e.preventDefault()
-        if (link.external) {
-            window.location.href = link.href
-            return
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-
-    function handleMobileNavClick(link: typeof NAV_LINKS[0]) {
-        setMobileOpen(false)
-        if (link.external) {
-            window.location.href = link.href
-            return
-        }
-        setTimeout(() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-        }, 250)
-    }
 
     return (
         <header
@@ -94,7 +84,7 @@ export default function Header() {
                     WebkitBackdropFilter: 'blur(40px)',
                     border: '1px solid rgba(207,0,163,0.07)',
                     boxShadow: '0 8px 40px rgba(0,0,0,0.2)',
-                    overflow: 'hidden',
+                    overflow: 'visible',
                 }}
             >
 
@@ -124,23 +114,13 @@ export default function Header() {
                     className="hidden md:flex items-center gap-9"
                 >
                     {NAV_LINKS.map(link => (
-                        link.external ? (
-                            <a
-                                key={link.label}
-                                href={link.href}
-                                className="nav-link"
-                            >
-                                {link.label}
-                            </a>
-                        ) : (
-                            <button
-                                key={link.label}
-                                className="nav-link"
-                                onClick={e => handleNavClick(e, link)}
-                            >
-                                {link.label}
-                            </button>
-                        )
+                        <a
+                            key={link.label}
+                            href={link.href}
+                            className="nav-link"
+                        >
+                            {link.label}
+                        </a>
                     ))}
 
                     {/* Useful links dropdown */}
@@ -287,17 +267,18 @@ export default function Header() {
                     >
                         <div style={{ padding: '8px 20px 18px', display: 'flex', flexDirection: 'column', gap: '2px', borderTop: '1px solid rgba(207,0,163,0.1)' }}>
                             {NAV_LINKS.map((link, i) => (
-                                <motion.button
+                                <motion.a
                                     key={link.label}
+                                    href={link.href}
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: i * 0.05 }}
-                                    onClick={() => handleMobileNavClick(link)}
+                                    onClick={() => setMobileOpen(false)}
                                     className="nav-link"
-                                    style={{ fontSize: '15px', color: 'rgba(215,194,240,0.65)', padding: '10px 0', borderBottom: '1px solid rgba(207,0,163,0.06)', textAlign: 'left', width: '100%', borderRadius: 0 }}
+                                    style={{ display: 'block', fontSize: '15px', color: 'rgba(215,194,240,0.78)', padding: '10px 0', borderBottom: '1px solid rgba(207,0,163,0.06)', textAlign: 'left', width: '100%', borderRadius: 0 }}
                                 >
                                     {link.label}
-                                </motion.button>
+                                </motion.a>
                             ))}
 
                             <motion.p
@@ -305,7 +286,7 @@ export default function Header() {
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: NAV_LINKS.length * 0.05 }}
                                 className="font-text"
-                                style={{ fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', margin: '14px 0 4px' }}
+                                style={{ fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.58)', margin: '14px 0 4px' }}
                             >
                                 Полезное
                             </motion.p>
@@ -318,7 +299,7 @@ export default function Header() {
                                     transition={{ delay: (NAV_LINKS.length + i) * 0.05 }}
                                     onClick={() => setMobileOpen(false)}
                                     className="nav-link"
-                                    style={{ display: 'block', fontSize: '15px', color: 'rgba(215,194,240,0.65)', padding: '10px 0', borderBottom: '1px solid rgba(207,0,163,0.06)', textAlign: 'left', width: '100%', borderRadius: 0 }}
+                                    style={{ display: 'block', fontSize: '15px', color: 'rgba(215,194,240,0.78)', padding: '10px 0', borderBottom: '1px solid rgba(207,0,163,0.06)', textAlign: 'left', width: '100%', borderRadius: 0 }}
                                 >
                                     {link.label}
                                 </motion.a>
