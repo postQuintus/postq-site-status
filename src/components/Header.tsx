@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { ChevronDown, Globe, LifeBuoy } from 'lucide-react'
+import { Activity, ChevronDown, Globe, LifeBuoy } from 'lucide-react'
 import PersonalAccountButton from './PersonalAccountButton'
 
 const NAV_LINKS = [
@@ -15,6 +15,7 @@ const NAV_LINKS = [
 
 const USEFUL_LINKS = [
     { label: 'Справочный центр', description: 'Инструкции и ответы на частые вопросы', href: 'https://postq.space/help', icon: LifeBuoy },
+    { label: 'Статус серверов', description: 'Доступность серверов в реальном времени', href: '/', icon: Activity },
     { label: 'Узнать мой IP', description: 'Проверьте свой текущий IP-адрес', href: 'https://postq.space/ip', icon: Globe },
 ]
 
@@ -306,7 +307,7 @@ export default function Header() {
                             ))}
 
                             <div style={{ marginTop: '12px' }}>
-                                <PersonalAccountButton />
+                                <PersonalAccountButton fullWidth />
                             </div>
                         </div>
                     </motion.div>

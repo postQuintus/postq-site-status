@@ -2,7 +2,11 @@
 
 import { motion } from 'framer-motion'
 
-export default function PersonalAccountButton() {
+interface PersonalAccountButtonProps {
+    fullWidth?: boolean
+}
+
+export default function PersonalAccountButton({ fullWidth = false }: PersonalAccountButtonProps) {
     return (
         <motion.a
             href="https://web.postq.space"
@@ -21,6 +25,7 @@ export default function PersonalAccountButton() {
                 boxShadow: '0 0 15px rgba(207, 0, 163, 0.3), inset 0 0 15px rgba(207, 0, 163, 0.05)',
                 color: 'rgb(255, 255, 255)',
                 transition: 'color, background-color, border-color, box-shadow, transform, opacity 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                width: fullWidth ? '100%' : undefined,
             }}
         >
             Личный кабинет
