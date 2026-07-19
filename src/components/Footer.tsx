@@ -15,7 +15,7 @@ const COLUMNS: { title: string; links: { label: string; href: string; external?:
     title: 'Продукт',
     links: [
       { label: 'Личный кабинет', href: 'https://web.postq.space', external: true },
-      { label: 'Цены', href: 'https://postq.space/#pricing', external: true },
+      { label: 'Подписка', href: 'https://postq.space/#pricing', external: true },
       { label: 'Как подключить', href: 'https://postq.space/#howto', external: true },
       { label: 'FAQ', href: 'https://postq.space/#faq', external: true },
       // Self-link — the status page never needs to leave itself for this one.
@@ -111,9 +111,9 @@ function FooterContent() {
 
       <div className="footer-bottom">
         <div className="footer-bottom-links">
-          <a href="https://postq.space/privacy" target="_blank" rel="noopener noreferrer" className="footer-link">политика конфиденциальности</a>
+          <a href="https://postq.space/privacy" target="_blank" rel="noopener noreferrer" className="footer-link">Политика конфиденциальности</a>
           <Dot />
-          <a href="https://postq.space/terms" target="_blank" rel="noopener noreferrer" className="footer-link">пользовательское соглашение</a>
+          <a href="https://postq.space/terms" target="_blank" rel="noopener noreferrer" className="footer-link">Пользовательское соглашение</a>
           <Dot />
           <a href="mailto:hello@postq.space" className="footer-link">hello@postq.space</a>
         </div>

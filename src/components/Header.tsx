@@ -8,7 +8,7 @@ import { Activity, ChevronDown, Globe, LifeBuoy } from 'lucide-react'
 import PersonalAccountButton from './PersonalAccountButton'
 
 const NAV_LINKS = [
-    { label: 'Цены',            href: 'https://postq.space/#pricing' },
+    { label: 'Подписка',        href: 'https://postq.space/#pricing' },
     { label: 'Как подключить',  href: 'https://postq.space/#howto'   },
     { label: 'FAQ',              href: 'https://postq.space/#faq'     },
 ]
