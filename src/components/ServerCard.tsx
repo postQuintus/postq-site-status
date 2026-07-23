@@ -1,13 +1,18 @@
 "use client"
 
-import { Globe, Bot, type LucideIcon } from 'lucide-react'
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronDown, Globe, Bot, type LucideIcon } from 'lucide-react'
+import UptimeBar from './UptimeBar'
+import type { DayStatus } from '../lib/history-db'
 
 interface ServerCardProps {
   name: string
   protocol: string
   alive: boolean
   latency: number
-  showStatus?: boolean
+  subdomain?: string
+  history?: DayStatus[]
 }
 
 const EMOJI_ICONS: Partial<Record<number, LucideIcon>> = {
@@ -47,77 +52,108 @@ export function parseNamePrefix(name: string): NamePrefix {
   return { type: 'none', cleanName: name }
 }
 
-export default function ServerCard({ name, alive, latency, showStatus }: ServerCardProps) {
+export default function ServerCard({ name, alive, subdomain, history }: ServerCardProps) {
+  const [open, setOpen] = useState(false)
+  const hasHistory = Boolean(history && history.length > 0)
+  const isOpen = open && hasHistory
   const dotColor = alive ? '#22c55e' : '#ef4444'
-  const dotGlow = alive
-    ? '0 0 6px rgba(34, 197, 94, 0.7)'
-    : '0 0 6px rgba(239, 68, 68, 0.7)'
 
   const prefix = parseNamePrefix(name)
 
   return (
-    <div className="server-card">
-      {/* Status dot */}
-      <span
-        className={alive ? 'dot-wrapper dot-pulse' : 'dot-wrapper'}
-        style={{ flexShrink: 0, position: 'relative', width: '8px', height: '8px' }}
-      >
-        <span style={{
-          position: 'absolute', inset: 0,
-          borderRadius: '50%',
-          background: dotColor,
-          boxShadow: dotGlow,
-        }} />
-      </span>
-
-      {/* Server name */}
-      <span
+    <div>
+      <button
+        type="button"
+        onClick={() => hasHistory && setOpen((v) => !v)}
         style={{
-          flex: 1,
+          width: '100%',
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
-          fontFamily: "'GT Eesti Pro Text', system-ui, -apple-system, sans-serif",
-          fontSize: '14px',
-          fontWeight: 400,
-          color: 'var(--text)',
-          overflow: 'hidden',
+          gap: '14px',
+          padding: '24px 18px',
+          background: 'none',
+          border: 'none',
+          cursor: hasHistory ? 'pointer' : 'default',
+          textAlign: 'left',
+          font: 'inherit',
+          color: 'inherit',
         }}
       >
-        {prefix.type === 'flag' && (
-          <img
-            src={`https://flagcdn.com/20x15/${prefix.code}.png`}
-            srcSet={`https://flagcdn.com/40x30/${prefix.code}.png 2x`}
-            width={20}
-            height={15}
-            alt={prefix.code.toUpperCase()}
-            style={{ flexShrink: 0, borderRadius: '2px', display: 'block' }}
+        {/* Disclosure chevron */}
+        <span style={{ flexShrink: 0, width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: hasHistory ? 1 : 0 }}>
+          <ChevronDown
+            size={16}
+            color="var(--text2)"
+            style={{ transform: open ? 'rotate(180deg)' : undefined, transition: 'transform 0.2s ease' }}
           />
-        )}
-        {prefix.type === 'icon' && (
-          <prefix.Icon size={16} color="var(--text2)" style={{ flexShrink: 0 }} />
-        )}
-        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {prefix.type === 'none' ? name : prefix.cleanName}
         </span>
-      </span>
 
-      {/* Latency / status */}
-      <span
-        style={{
-          flexShrink: 0,
-          minWidth: '72px',
-          textAlign: 'right' as const,
-          fontFamily: "'GT Eesti Pro Text', system-ui, -apple-system, sans-serif",
-          fontSize: '13px',
-          fontWeight: 400,
-          color: alive ? 'var(--text2)' : '#ef4444',
-        }}
-      >
-        {showStatus
-          ? (alive ? 'Работает' : 'Не работает')
-          : (latency > 0 ? `${latency} ms` : '—')}
-      </span>
+        {/* Server name */}
+        <span
+          style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            fontFamily: "'GT Eesti Pro Text', system-ui, -apple-system, sans-serif",
+            fontSize: '14px',
+            fontWeight: 400,
+            color: 'var(--text)',
+            overflow: 'hidden',
+          }}
+        >
+          {prefix.type === 'flag' && (
+            <img
+              src={`https://flagcdn.com/20x15/${prefix.code}.png`}
+              srcSet={`https://flagcdn.com/40x30/${prefix.code}.png 2x`}
+              width={20}
+              height={15}
+              alt={prefix.code.toUpperCase()}
+              style={{ flexShrink: 0, borderRadius: '2px', display: 'block' }}
+            />
+          )}
+          {/* Solid, not alpha — var(--text2) is an rgba() and the globe/bot
+              glyphs have self-overlapping strokes; alpha there double-blends
+              into a dark smear at every crossing (same fix as postq-site's
+              .help-search-icon). */}
+          {prefix.type === 'icon' && (
+            <prefix.Icon size={16} color="#8b7ea3" style={{ flexShrink: 0 }} />
+          )}
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {prefix.type === 'none' ? name : prefix.cleanName}
+          </span>
+        </span>
+
+        {/* Status */}
+        <span
+          style={{
+            flexShrink: 0,
+            fontFamily: "'GT Eesti Pro Text', system-ui, -apple-system, sans-serif",
+            fontSize: '13px',
+            fontWeight: 400,
+            color: dotColor,
+          }}
+        >
+          {alive ? 'Работает' : 'Не работает'}
+        </span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ padding: '20px 18px 20px' }}>
+              <UptimeBar history={history!} subdomain={subdomain} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

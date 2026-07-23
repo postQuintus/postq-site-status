@@ -28,6 +28,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+CLAUDE.md
 
 # vercel
 .vercel
@@ -36,3 +37,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 geo/
+data/

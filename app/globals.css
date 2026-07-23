@@ -75,26 +75,24 @@
   --glass-border:    rgba(207, 0, 163, 0.08);
   --glass-bg:        rgba(255, 255, 255, 0.04);
   --glass-bg-nested: rgba(255, 255, 255, 0.03);
-  --glass-blur:      16px;
 }
 
 /* ─── Glass design system ─────────────────────────────────────────────────────
-   `.glass` — a surface sitting directly on the page background. Blurs the
-   real backdrop at --glass-blur (16px default). Surfaces that need a
-   different radius override --glass-blur locally; the footer needs a much
-   larger radius since it's a big area, and server cards keep a lighter blur
-   since there can be a dozen of them on screen at once (GPU blur cost scales
-   with instance count). */
+   `.glass` — a surface sitting directly on the page background.
+
+   No backdrop-filter on the base tier (synced from postq-site's perf fix).
+   Every in-flow card's backdrop here is only the body gradient + spotlight
+   orbs — smooth gradients that look the same blurred or not — while the GPU
+   re-blurs every such surface on every frame of scrolling, and (because the
+   orbs animate) even when the page is idle. Real blur is reserved for
+   surfaces that float OVER detailed content: the fixed header pill and its
+   dropdown (inline styles in Header.tsx). */
 .glass,
 .footer-inner,
 .server-card {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  backdrop-filter: blur(var(--glass-blur));
 }
-.footer-inner { --glass-blur: 40px; }
-.server-card  { --glass-blur: 12px; }
 
 /* ─── Reset & base — inside @layer base so utilities can override ─────────────── */
 @layer base {
@@ -189,24 +187,29 @@
 }
 
 .server-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
   border-radius: 14px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
   transition: border-color 250ms ease, background 250ms ease, box-shadow 250ms ease;
-  will-change: backdrop-filter;
 }
-.server-card:hover {
-  border-color: rgba(207, 0, 163, 0.14);
-  background: rgba(207, 0, 163, 0.06);
-  box-shadow: 0 4px 28px rgba(207, 0, 163, 0.08);
+
+/* Rows/sections sharing one card shell instead of each having its own —
+   a thin rule between consecutive children, nothing on the first. */
+.divided-list > * + * {
+  border-top: 1px solid var(--glass-border);
+}
+
+.page-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
 }
 
 /* ─── Site footer (синхронизирован с postq-site) ─────────────────────────────── */
 /* Стеклянный блок в языке шапки (liquid glass pill): radius 14,
-   полупрозрачный фон + blur, розовая рамка и мягкая тень. */
+   полупрозрачный фон (без blur — см. .glass выше), розовая рамка и мягкая тень. */
 .site-footer {
   position: relative;
   z-index: 1;
@@ -376,22 +379,4 @@ a.footer-link:hover { color: var(--text); }
 /* Respect user motion preference */
 @media (prefers-reduced-motion: reduce) {
   .spotlight-orb      { animation: none !important; }
-  .dot-pulse::after   { animation: none !important; }
-}
-
-/* ─── Status dot (server card pulse indicator) ────────────────────────────────── */
-@keyframes dot-ripple {
-  0%   { transform: scale(1); opacity: var(--dot-pulse-opacity, 0.7); }
-  100% { transform: scale(3.5); opacity: 0; }
-}
-.dot-wrapper {
-  display: inline-block;
-}
-.dot-pulse::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--dot-color, #22c55e);
-  animation: dot-ripple 1.8s ease-out infinite;
 }

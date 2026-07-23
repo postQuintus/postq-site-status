@@ -33,6 +33,9 @@ services:
       - XRAY_CHECKER_USER=${XRAY_CHECKER_USER}
       - XRAY_CHECKER_PASS=${XRAY_CHECKER_PASS}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - HISTORY_DB_PATH=/app/data/history.db
+    volumes:
+      - history-data:/app/data
     depends_on:
       xray-checker:
         condition: service_healthy
@@ -50,3 +53,5 @@ networks:
     internal: true
   caddy_net:
     external: true
+volumes:
+  history-data:

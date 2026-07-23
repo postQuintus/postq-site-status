@@ -46,8 +46,6 @@ export default function NotFound() {
             lineHeight: '1.8',
             textAlign: 'left',
             background: 'rgba(8,0,26,0.6)',
-            backdropFilter: 'blur(20px) saturate(150%)',
-            WebkitBackdropFilter: 'blur(20px) saturate(150%)',
             border: '1px solid rgba(207,0,163,0.18)',
             borderRadius: '10px',
             padding: '14px 20px',

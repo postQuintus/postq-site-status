@@ -4,29 +4,68 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import ServerCard from './ServerCard'
 import ServerGroup from './ServerGroup'
+import IncidentHistory from './IncidentHistory'
 import Footer from './Footer'
 import type { ServerStatus } from '../../app/api/status/route'
+import type { HistoryByName, DayStatus, Incident } from '../lib/history-db'
+import { cleanBaseName } from '../lib/format'
 
 interface Props {
   initialServers: ServerStatus[]
   initialServices: ServerStatus[]
 }
 
-/** Группирует "Россия #1", "Россия #2" и т.п. под общим именем локации без номера.
- *  Остальные локации не сворачиваются, даже если имена совпадают. */
+/** Groups servers that share the same flag + country name into one location.
+ *  Each group renders as a single collapsible card (ServerGroup); a country
+ *  with only one server renders as a normal ServerCard. */
 function groupByLocation(list: ServerStatus[]): [string, ServerStatus[]][] {
   const groups = new Map<string, ServerStatus[]>()
   list.forEach((server, i) => {
-    const base = server.name.replace(/\s*#\d+\s*$/, '').trim()
-    const key = base.includes('Россия') ? base : `${server.name}__${i}`
+    const base = cleanBaseName(server.name)
+    const key = base || `${server.name}__${i}`
     groups.set(key, [...(groups.get(key) ?? []), server])
   })
   return Array.from(groups.entries())
 }
 
+/** Фиктивная 90-дневная история для дев-мока: почти всегда online, с редкими инцидентами. */
+function mockHistory(names: string[]): HistoryByName {
+  const days = 90
+  const result: HistoryByName = {}
+  names.forEach((name, ni) => {
+    const history: DayStatus[] = []
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+      const incident = (i + ni * 7) % 23 === 0
+      const status: DayStatus['status'] = incident ? 'partial' : 'online'
+      history.push({
+        date,
+        status,
+        uptimePct: incident ? 92 : 100,
+        totalSamples: 288,
+        aliveSamples: incident ? 265 : 288,
+      })
+    }
+    result[name] = history
+  })
+  return result
+}
+
+/** Фиктивные инциденты для дев-мока. */
+function mockIncidents(): Incident[] {
+  const now = Date.now()
+  return [
+    { name: '🇳🇱 Нидерланды', subdomain: '?', startAt: now - 2 * 24 * 60 * 60 * 1000, endAt: now - 2 * 24 * 60 * 60 * 1000 + 25 * 60 * 1000, durationMs: 25 * 60 * 1000 },
+    { name: '🌐 Личный кабинет', subdomain: '', startAt: now - 2 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000, endAt: now - 2 * 24 * 60 * 60 * 1000 - 50 * 60 * 1000, durationMs: 10 * 60 * 1000 },
+    { name: '🇷🇺 Россия #3', subdomain: 'pl1', startAt: now - 9 * 24 * 60 * 60 * 1000, endAt: now - 9 * 24 * 60 * 60 * 1000 + 70 * 60 * 1000, durationMs: 70 * 60 * 1000 },
+  ]
+}
+
 export default function StatusClient({ initialServers, initialServices = [] }: Props) {
   const [servers, setServers] = useState<ServerStatus[]>(initialServers)
   const [services, setServices] = useState<ServerStatus[]>(initialServices)
+  const [history, setHistory] = useState<HistoryByName>({})
+  const [incidents, setIncidents] = useState<Incident[]>([])
   const [now, setNow] = useState(() => new Date().toLocaleString('ru-RU', {
     day: '2-digit', month: '2-digit', year: 'numeric',
     hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Moscow',
@@ -36,18 +75,21 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
     // DEV MOCK: VPN servers replaced with fixtures (xray-checker not running locally).
     // Services use real initial data from the server component — no override needed.
     if (process.env.NODE_ENV === 'development') {
-      setServers([
-        { name: '🇩🇪 Германия', protocol: 'vless', alive: true, latency: 412 },
-        { name: '🇫🇮 Финляндия', protocol: 'vless', alive: true, latency: 298 },
-        { name: '🇳🇱 Нидерланды', protocol: 'vless', alive: false, latency: 0 },
-        { name: '🇵🇱 Польша', protocol: 'vless', alive: true, latency: 387 },
-        { name: '🇷🇺 Россия #1', protocol: 'vless', alive: true, latency: 440 },
-        { name: '🇷🇺 Россия #2', protocol: 'vless', alive: true, latency: 402 },
-        { name: '🇷🇺 Россия #3', protocol: 'vless', alive: false, latency: 0 },
-      ])
+      const mockServers = [
+        { name: '🇩🇪 Германия', protocol: 'vless', alive: true, latency: 412, subdomain: 'de1' },
+        { name: '🇫🇮 Финляндия', protocol: 'vless', alive: true, latency: 298, subdomain: 'fi1' },
+        { name: '🇳🇱 Нидерланды', protocol: 'vless', alive: false, latency: 0, subdomain: '?' },
+        { name: '🇵🇱 Польша', protocol: 'vless', alive: true, latency: 387, subdomain: 'pl1' },
+        { name: '🇷🇺 Россия #1', protocol: 'vless', alive: true, latency: 440, subdomain: 'de3' },
+        { name: '🇷🇺 Россия #2', protocol: 'vless', alive: true, latency: 402, subdomain: 'nl6' },
+        { name: '🇷🇺 Россия #3', protocol: 'vless', alive: false, latency: 0, subdomain: 'pl1' },
+      ]
+      setServers(mockServers)
+      setHistory(mockHistory([...mockServers.map((s) => s.name), ...initialServices.map((s) => s.name)]))
+      setIncidents(mockIncidents())
       return
     }
-    const fetchData = async () => {
+    const fetchStatus = async () => {
       try {
         const res = await fetch('/api/status')
         const json = await res.json()
@@ -59,10 +101,32 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
         }))
       } catch { }
     }
-    fetchData()
-    const interval = setInterval(fetchData, 30000)
-    return () => clearInterval(interval)
-  }, [])
+    const fetchHistory = async () => {
+      try {
+        const res = await fetch('/api/history')
+        const json = await res.json()
+        setHistory(json)
+      } catch { }
+    }
+    const fetchIncidents = async () => {
+      try {
+        const res = await fetch('/api/incidents')
+        const json = await res.json()
+        setIncidents(json)
+      } catch { }
+    }
+    fetchStatus()
+    fetchHistory()
+    fetchIncidents()
+    const statusInterval = setInterval(fetchStatus, 30000)
+    const historyInterval = setInterval(fetchHistory, 5 * 60 * 1000)
+    const incidentsInterval = setInterval(fetchIncidents, 5 * 60 * 1000)
+    return () => {
+      clearInterval(statusInterval)
+      clearInterval(incidentsInterval)
+      clearInterval(historyInterval)
+    }
+  }, [initialServices])
 
   const online = servers.filter((s) => s.alive).length
   const total = servers.length
@@ -78,57 +142,52 @@ export default function StatusClient({ initialServers, initialServices = [] }: P
 
   return (
     <>
-    <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px', margin: '0 auto', padding: '100px 24px 0' }}>
+    <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px', margin: '0 auto', padding: '7rem 24px 0' }}>
       <motion.div
         initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.85, delay: 0.2 }}
         style={{ marginBottom: '40px' }}
       >
-        <h1 style={{ fontFamily: "'GT Eesti Pro Display', system-ui, sans-serif", fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontWeight: 700, lineHeight: 1.1, color: '#ffffff', marginBottom: '16px' }}>
+        <h1 className="page-hero-title">
           {statusHeadline}
         </h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          {!loading && (
-            <span style={{ display: 'inline-flex', alignItems: 'center', padding: '4px 14px', background: 'rgba(207,0,163,0.12)', border: '1px solid rgba(207,0,163,0.35)', borderRadius: '999px', fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '13px', fontWeight: 500, color: '#cf00a3' }}>
-              {online} / {total} онлайн
-            </span>
-          )}
-          <span style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '12px', color: 'var(--text2)' }}>
-            обновлено {now} МСК
-          </span>
+        <div style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '13px', color: 'var(--text2)' }}>
+          {!loading && <>{online} / {total} онлайн, </>}
+          обновлено {now} МСК
         </div>
       </motion.div>
 
       {servers.length > 0 ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '56px' }}>
           {services.length > 0 && (
             <div>
-              <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '11px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', marginBottom: '8px' }}>
-                инфраструктура
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {services.map((svc, i) => <ServerCard key={i} {...svc} showStatus />)}
+              <h2 className="font-display" style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--text)', margin: '0 0 20px' }}>
+                Инфраструктура
+              </h2>
+              <div className="server-card divided-list">
+                {services.map((svc, i) => <ServerCard key={i} {...svc} history={history[svc.name]} />)}
               </div>
             </div>
           )}
           {servers.length > 0 && (
             <div>
-              <p style={{ fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '11px', fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(215,194,240,0.3)', marginBottom: '8px' }}>
-                postq vpn
-              </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <h2 className="font-display" style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.75rem)', fontWeight: 700, color: 'var(--text)', margin: '0 0 20px' }}>
+                VPN серверы
+              </h2>
+              <div className="server-card divided-list">
                 {groupByLocation(servers).map(([base, group]) =>
                   group.length > 1
-                    ? <ServerGroup key={base} baseName={base} servers={group} />
-                    : <ServerCard key={base} {...group[0]} />
+                    ? <ServerGroup key={base} baseName={base} servers={group} history={history} />
+                    : <ServerCard key={base} {...group[0]} name={base} history={history[group[0].name]} />
                 )}
               </div>
             </div>
           )}
+          <IncidentHistory incidents={incidents} />
         </div>
       ) : (
-        <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text2)', fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '14px', background: 'rgba(8,0,26,0.55)', backdropFilter: 'blur(16px) saturate(150%)', WebkitBackdropFilter: 'blur(16px) saturate(150%)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}>
+        <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text2)', fontFamily: "'GT Eesti Pro Text', system-ui, sans-serif", fontSize: '14px', background: 'rgba(8,0,26,0.55)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04)' }}>
           Данные загружаются. Пожалуйста, подождите...
         </div>
       )}
