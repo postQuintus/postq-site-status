@@ -16,9 +16,6 @@ services:
       - CHECK_URL=https://www.gstatic.com/generate_204
     volumes:
       - ./geo:/app/geo
-    depends_on:
-      postq-vpn-status:
-        condition: service_healthy
     networks:
       - internal
       - caddy_net
