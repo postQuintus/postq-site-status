@@ -16,8 +16,8 @@ docker compose logs -f postq-vpn-status  # view app logs
 ## Architecture
 
 Two Docker services defined in `docker-compose.yml`:
-- **xray-checker** (`kutovoys/xray-checker`) — monitors VPN servers via RemnaWave subscription URL, exposes internal REST API at `http://xray-checker:2112` (Basic Auth protected)
-- **postq-vpn-status** (this Next.js app) — fetches from xray-checker server-side, serves a public status page
+- **xray-checker** (`kutovoys/xray-checker`) — monitors VPN servers via a RemnaWave subscription (fetched through `postq-vpn-status`'s `/api/subscription-proxy`, see below), exposes internal REST API at `http://xray-checker:2112` (Basic Auth protected)
+- **postq-vpn-status** (this Next.js app) — fetches from xray-checker server-side, serves a public status page; also proxies the subscription URL back to xray-checker (patched)
 
 **This project runs on a separate server from postq-site.** Caddy on that server reverse-proxies `status.postq.space` → `postq_vpn_status:3000`. Communication with postq-site happens entirely over the public internet via the `/api/status` endpoint (CORS-restricted to `https://postq.space`).
 
@@ -29,6 +29,12 @@ Two Docker services defined in `docker-compose.yml`:
 ### Data flow
 
 ```
+RemnaWave subscription URL
+        ↓
+app/api/subscription-proxy/route.ts  (patches REALITY publicKey, secret-header gated)
+        ↓
+xray-checker  (SUBSCRIPTION_URL points here, not at RemnaWave directly)
+        ↓
 xray-checker /api/v1/proxies  (Basic Auth, internal only)
         ↓
 src/lib/xray.ts            (fetchXrayServers/fetchServices — shared by page.tsx, the API route, and the sampler)
@@ -44,6 +50,7 @@ postq-site VpnStatusWidget            app/api/history/route.ts (same-origin, dai
 
 ### Key files
 
+- `app/api/subscription-proxy/route.ts` — sits between xray-checker and the real `SUBSCRIPTION_URL`. Stopgap for [kutovoys/xray-checker#188](https://github.com/kutovoys/xray-checker/issues/188): its JSON parser only reads `realitySettings.publicKey`, not the `password` alias some panels (RemnaWave included) emit, so REALITY outbounds get silently dropped from monitoring. This route backfills `publicKey` from `password` before xray-checker ever sees the payload — no fork of the upstream image needed. Gated by a shared-secret header (`SUBSCRIPTION_HEADERS` on the xray-checker container, checked against `SUBSCRIPTION_PROXY_SECRET`) since the route is otherwise reachable through the same public Caddy path as the rest of the app, and the payload carries live server/user credentials. Remove this hop once upstream fixes the parser.
 - `src/lib/xray.ts` — shared fetch-and-normalise logic against xray-checker (`fetchXrayServers`) and the two service health checks (`fetchServices`). Used by `app/page.tsx`, `app/api/status/route.ts`, and `src/lib/sampler.ts` — the single place to update if a new xray-checker version changes field names.
 - `app/api/status/route.ts` — the only public cross-origin API endpoint (CORS-restricted to `https://postq.space`). Returns 200 even on upstream errors so the widget never enters an error state.
 - `app/page.tsx` — server component, calls `src/lib/xray.ts` directly. Refresh = page reload.
@@ -61,7 +68,8 @@ postq-site VpnStatusWidget            app/api/history/route.ts (same-origin, dai
 
 | Variable | Description |
 |---|---|
-| `SUBSCRIPTION_URL` | RemnaWave subscription URL passed to xray-checker |
+| `SUBSCRIPTION_URL` | RemnaWave subscription URL, fetched by `postq-vpn-status` via `/api/subscription-proxy` (not by xray-checker directly) |
+| `SUBSCRIPTION_PROXY_SECRET` | Shared secret xray-checker must send to `/api/subscription-proxy`; without it the route 404s |
 | `XRAY_CHECKER_USER` | Basic auth username for xray-checker |
 | `XRAY_CHECKER_PASS` | Basic auth password for xray-checker |
 | `XRAY_CHECKER_URL` | Internal URL of xray-checker (`http://xray-checker:2112` in Docker, `http://localhost:2112` locally) |

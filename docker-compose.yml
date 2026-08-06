@@ -4,7 +4,10 @@ services:
     container_name: postq_xray_checker
     restart: unless-stopped
     environment:
-      - SUBSCRIPTION_URL=${SUBSCRIPTION_URL}
+      # Routed through postq-vpn-status's /api/subscription-proxy, not fetched
+      # directly — see that route's comment for why (xray-checker#188 stopgap).
+      - SUBSCRIPTION_URL=http://postq-vpn-status:3000/api/subscription-proxy
+      - SUBSCRIPTION_HEADERS=X-Subscription-Proxy-Secret: ${SUBSCRIPTION_PROXY_SECRET}
       - METRICS_PROTECTED=true
       - METRICS_USERNAME=${XRAY_CHECKER_USER}
       - METRICS_PASSWORD=${XRAY_CHECKER_PASS}
@@ -13,6 +16,9 @@ services:
       - CHECK_URL=https://www.gstatic.com/generate_204
     volumes:
       - ./geo:/app/geo
+    depends_on:
+      postq-vpn-status:
+        condition: service_healthy
     networks:
       - internal
       - caddy_net
@@ -34,11 +40,10 @@ services:
       - XRAY_CHECKER_PASS=${XRAY_CHECKER_PASS}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - HISTORY_DB_PATH=/app/data/history.db
+      - SUBSCRIPTION_URL=${SUBSCRIPTION_URL}
+      - SUBSCRIPTION_PROXY_SECRET=${SUBSCRIPTION_PROXY_SECRET}
     volumes:
       - history-data:/app/data
-    depends_on:
-      xray-checker:
-        condition: service_healthy
     networks:
       - internal
       - caddy_net
