@@ -46,10 +46,21 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    // Forward the caller's headers as-is (minus hop-by-hop/internal ones) —
+    // RemnaWave gates real subscription content behind a client allowlist
+    // matched on User-Agent plus app-specific headers like X-Hwid, so
+    // whatever xray-checker sends to impersonate a known client (e.g. Happ
+    // via SUBSCRIPTION_JSON_FORMAT) needs to reach RemnaWave unchanged.
+    const forwardedHeaders = new Headers()
+    for (const [key, value] of req.headers.entries()) {
+      const k = key.toLowerCase()
+      if (k === 'host' || k === 'connection' || k === 'content-length' || k === 'x-subscription-proxy-secret') continue
+      forwardedHeaders.set(key, value)
+    }
+    if (!forwardedHeaders.has('user-agent')) forwardedHeaders.set('User-Agent', 'Xray-Checker')
+
     const upstream = await fetch(subscriptionUrl, {
-      headers: {
-        'User-Agent': req.headers.get('user-agent') ?? 'Xray-Checker',
-      },
+      headers: forwardedHeaders,
       cache: 'no-store',
       signal: AbortSignal.timeout(10000),
     })
