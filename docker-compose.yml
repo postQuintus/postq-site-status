@@ -7,7 +7,7 @@ services:
       # Routed through postq-vpn-status's /api/subscription-proxy, not fetched
       # directly — see that route's comment for why (xray-checker#188 stopgap).
       - SUBSCRIPTION_URL=http://postq-vpn-status:3000/api/subscription-proxy
-      - SUBSCRIPTION_HEADERS=X-Subscription-Proxy-Secret: ${SUBSCRIPTION_PROXY_SECRET}
+      - "SUBSCRIPTION_HEADERS=X-Subscription-Proxy-Secret: ${SUBSCRIPTION_PROXY_SECRET}"
       - METRICS_PROTECTED=true
       - METRICS_USERNAME=${XRAY_CHECKER_USER}
       - METRICS_PASSWORD=${XRAY_CHECKER_PASS}
