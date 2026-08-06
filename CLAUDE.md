@@ -62,6 +62,8 @@ postq-site VpnStatusWidget            app/api/history/route.ts (same-origin, dai
 
 **Single-replica assumption:** the sampler and SQLite file assume exactly one running container. If this service is ever scaled to multiple replicas sharing the volume, multiple concurrent 5-minute samplers would write to the same SQLite file — fine for readers (WAL), but a real contention risk for concurrent writers.
 
+**xray-checker version pin:** `docker-compose.yml` pins `kutovoys/xray-checker` to an explicit tag (not `:latest`) — `docker compose up` never re-pulls an image tag it already has cached, so an unpinned `:latest` silently stops updating after the first deploy (this bit us: a server ran v1.2.4 for months while `latest` moved to v1.3.1, missing `SUBSCRIPTION_HEADERS` support entirely, which `/api/subscription-proxy` depends on). To upgrade: bump the tag here, then `docker compose pull xray-checker && docker compose up -d`.
+
 **better-sqlite3 version pin:** pinned to `11.10.0` (not `^`) in `package.json` because it's the last major with a published Node 20 (ABI v115) musl prebuild matching the `node:20-alpine` base image — 12.x has no Node 20 prebuild, 13.x requires Node ≥22. Don't let `npm update`/renovate bump the major without also bumping the Dockerfile's base image.
 
 ### Environment variables (see `.env.example`)
