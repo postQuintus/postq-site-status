@@ -5,7 +5,7 @@ import type { ServerStatus } from '../../app/api/status/route'
 // We check their origin servers directly via TLS handshake instead.
 const CDN_ORIGIN_MAP: Record<string, string> = {
   'Россия #1': 'de3.postq.space',
-  'Россия #2': 'nl6.postq.space',
+  'Россия #2': 'se4.postq.space',
   'Россия #3': 'pl1.postq.space',
   'Россия #4': 'de2.postq.space',
   'Россия #5': 'de4.postq.space',
