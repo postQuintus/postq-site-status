@@ -8,6 +8,11 @@ services:
       # directly — see that route's comment for why (xray-checker#188 stopgap).
       - SUBSCRIPTION_URL=http://postq-vpn-status:3000/api/subscription-proxy
       - "SUBSCRIPTION_HEADERS=X-Subscription-Proxy-Secret: ${SUBSCRIPTION_PROXY_SECRET}"
+      # RemnaWave only serves real proxy configs to recognized client User-Agents
+      # (Happ, v2rayNG, etc.) — anything else, including xray-checker's own
+      # default UA, gets a "subscription not found" placeholder back. This makes
+      # xray-checker impersonate the Happ app (UA: Happ/1.0) instead.
+      - SUBSCRIPTION_JSON_FORMAT=true
       - METRICS_PROTECTED=true
       - METRICS_USERNAME=${XRAY_CHECKER_USER}
       - METRICS_PASSWORD=${XRAY_CHECKER_PASS}
